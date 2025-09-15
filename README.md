@@ -41,21 +41,8 @@ cp .env.example .env
 
 ### Running the Application
 
-#### Development Mode
 ```bash
-python -m httpilot.app
-```
-
-#### Using Flask CLI
-```bash
-export FLASK_APP=httpilot.app
-export FLASK_ENV=development
-flask run
-```
-
-#### Using Gunicorn (Production)
-```bash
-gunicorn --bind 0.0.0.0:5000 wsgi:app
+make run
 ```
 
 The application will be available at `http://localhost:5000`

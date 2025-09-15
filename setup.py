@@ -8,9 +8,9 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="httpilot",
-    version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    use_scm_version=True,
+    setup_requires=["setuptools_scm"],
+    author="plantree",
     description="A copilot tool to help understand HTTP",
     long_description=long_description,
     long_description_content_type="text/markdown",
