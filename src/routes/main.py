@@ -2,55 +2,52 @@
 
 from flask import Blueprint, render_template, jsonify
 
-bp = Blueprint('main', __name__)
+bp = Blueprint("main", __name__)
 
 
-@bp.route('/')
+@bp.route("/")
 def index():
     """Home page with API documentation."""
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@bp.route('/health')
+@bp.route("/health")
 def health():
     """Health check endpoint."""
-    return jsonify({
-        'status': 'ok',
-        'message': 'HTTPilot is running'
-    })
+    return jsonify({"status": "ok", "message": "HTTPilot is running"})
 
 
-@bp.route('/api')
+@bp.route("/api")
 def api_info():
     """API information endpoint."""
-    return jsonify({
-        'name': 'HTTPilot',
-        'version': '0.1.0',
-        'description': 'A copilot tool to help understand HTTP',
-        'endpoints': {
-            'HTTP Methods': {
-                '/get': 'GET request testing',
-                '/post': 'POST request testing',
-                '/put': 'PUT request testing',
-                '/delete': 'DELETE request testing',
-                '/patch': 'PATCH request testing',
-                '/head': 'HEAD request testing',
-                '/options': 'OPTIONS request testing'
+    return jsonify(
+        {
+            "name": "HTTPilot",
+            "version": "0.1.0",
+            "description": "A copilot tool to help understand HTTP",
+            "endpoints": {
+                "HTTP Methods": {
+                    "/get": "GET request testing",
+                    "/post": "POST request testing",
+                    "/put": "PUT request testing",
+                    "/delete": "DELETE request testing",
+                    "/patch": "PATCH request testing",
+                    "/head": "HEAD request testing",
+                    "/options": "OPTIONS request testing",
+                },
+                "Status Codes": {"/status/<code>": "Return specific HTTP status code"},
+                "Request Inspection": {
+                    "/headers": "Return request headers",
+                    "/ip": "Return client IP address",
+                    "/user-agent": "Return user agent",
+                    "/cookies": "Return cookies",
+                },
+                "Utilities": {
+                    "/delay/<seconds>": "Delayed response",
+                    "/json": "Return JSON data",
+                    "/xml": "Return XML data",
+                    "/html": "Return HTML data",
+                },
             },
-            'Status Codes': {
-                '/status/<code>': 'Return specific HTTP status code'
-            },
-            'Request Inspection': {
-                '/headers': 'Return request headers',
-                '/ip': 'Return client IP address',
-                '/user-agent': 'Return user agent',
-                '/cookies': 'Return cookies'
-            },
-            'Utilities': {
-                '/delay/<seconds>': 'Delayed response',
-                '/json': 'Return JSON data',
-                '/xml': 'Return XML data',
-                '/html': 'Return HTML data'
-            }
         }
-    })
+    )

@@ -13,7 +13,7 @@ from src.app import create_app
 @pytest.fixture
 def app():
     """Create and configure a test app."""
-    app = create_app('testing')
+    app = create_app("testing")
     return app
 
 
