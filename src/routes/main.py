@@ -1,6 +1,7 @@
 """Main routes for HTTPilot."""
 
 from flask import Blueprint, render_template, jsonify
+from .. import __version__
 
 bp = Blueprint("main", __name__)
 
@@ -8,7 +9,7 @@ bp = Blueprint("main", __name__)
 @bp.route("/")
 def index():
     """Home page with API documentation."""
-    return render_template("index.html")
+    return render_template("index.html", version=__version__)
 
 
 @bp.route("/health")
@@ -23,7 +24,7 @@ def api_info():
     return jsonify(
         {
             "name": "HTTPilot",
-            "version": "0.1.0",
+            "version": __version__,
             "description": "A copilot tool to help understand HTTP",
             "endpoints": {
                 "HTTP Methods": {

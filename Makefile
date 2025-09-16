@@ -1,4 +1,4 @@
-.PHONY: help install run test clean dev
+.PHONY: help install run test clean dev version tag
 
 # Default target
 help:
@@ -13,6 +13,8 @@ help:
 	@echo "  coverage - Run tests with coverage report"
 	@echo "  clean    - Clean up cache files"
 	@echo "  format   - Format code with black (if installed)"
+	@echo "  version  - Show current version"
+	@echo "  tag      - Create a new release tag (usage: make tag VERSION=x.y.z)"
 
 # Install dependencies
 install:
@@ -47,3 +49,18 @@ clean:
 # Format code (requires black)
 format:
 	black src/ tests/ --line-length 88
+
+# Show current version
+version:
+	@python -m setuptools_scm
+
+# Create a new release tag
+tag:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Error: VERSION is required. Usage: make tag VERSION=x.y.z"; \
+		exit 1; \
+	fi
+	@echo "Creating tag v$(VERSION)..."
+	@git tag -a v$(VERSION) -m "Release version $(VERSION)"
+	@echo "Tag v$(VERSION) created successfully!"
+	@echo "To push: git push origin v$(VERSION)"

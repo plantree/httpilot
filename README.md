@@ -110,6 +110,22 @@ curl -H "Custom-Header: test-value" http://localhost:5000/headers
 
 ## Development
 
+### Version Management
+
+This project uses `setuptools_scm` for automatic version management:
+
+```bash
+# Check current version
+make version
+
+# Create a new release tag
+make tag VERSION=1.2.3
+
+# Development versions are automatically generated
+```
+
+See [Version Management Guide](docs/VERSION_MANAGEMENT.md) for detailed information.
+
 ### Running Tests
 ```bash
 # Install test dependencies
@@ -119,7 +135,7 @@ pip install pytest pytest-cov
 pytest
 
 # Run with coverage
-pytest --cov=httpilot
+pytest --cov=src
 ```
 
 ### Project Structure
