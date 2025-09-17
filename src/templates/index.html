@@ -66,6 +66,62 @@
             border-top: 1px solid #eee;
             color: #666;
         }
+        
+        /* Collapsible sections */
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            margin-bottom: 15px;
+            padding: 8px 0;
+            border-radius: 4px;
+        }
+        
+        .collapsible:hover {
+            color: #007acc;
+            background-color: rgba(0, 122, 204, 0.05);
+        }
+        
+        .collapsible::before {
+            content: '▼';
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+            font-size: 0.8em;
+            color: #007acc;
+        }
+        
+        .collapsible.collapsed::before {
+            transform: rotate(-90deg);
+        }
+        
+        .collapsible-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-bottom: 20px;
+        }
+        
+        .collapsible-content.collapsed {
+            max-height: 0 !important;
+            margin-bottom: 0;
+        }
+        
+        .toggle-all {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .toggle-all:hover {
+            background: #005999;
+        }
     </style>
 </head>
 <body>
@@ -74,125 +130,210 @@
         <p>A copilot tool to help understand HTTP requests and responses. Inspired by <a href="https://httpbin.org" target="_blank">httpbin</a>.</p>
         
         <h2>📋 API Endpoints</h2>
+        <button class="toggle-all" onclick="toggleAllSections()">展开全部</button>
         
-        <h3>HTTP Methods Testing</h3>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/get</code>
-            <div class="description">Test GET requests and view request information</div>
-        </div>
-        <div class="endpoint">
-            <span class="method post">POST</span>
-            <code>/post</code>
-            <div class="description">Test POST requests with form data or JSON</div>
-        </div>
-        <div class="endpoint">
-            <span class="method put">PUT</span>
-            <code>/put</code>
-            <div class="description">Test PUT requests with data</div>
-        </div>
-        <div class="endpoint">
-            <span class="method delete">DELETE</span>
-            <code>/delete</code>
-            <div class="description">Test DELETE requests</div>
-        </div>
-        <div class="endpoint">
-            <span class="method patch">PATCH</span>
-            <code>/patch</code>
-            <div class="description">Test PATCH requests with partial data</div>
-        </div>
-        <div class="endpoint">
-            <span class="method head">HEAD</span>
-            <code>/head</code>
-            <div class="description">Test HEAD requests (headers only)</div>
-        </div>
-        <div class="endpoint">
-            <span class="method options">OPTIONS</span>
-            <code>/options</code>
-            <div class="description">Test OPTIONS requests</div>
-        </div>
-
-        <h3>Status Codes</h3>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/status/&lt;code&gt;</code>
-            <div class="description">Return response with specific HTTP status code (e.g., /status/404)</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/status/random</code>
-            <div class="description">Return response with random status code</div>
+        <h3 class="collapsible">HTTP Methods Testing</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/get</code>
+                <div class="description">Test GET requests and view request information</div>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/post</code>
+                <div class="description">Test POST requests with form data or JSON</div>
+            </div>
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <code>/put</code>
+                <div class="description">Test PUT requests with data</div>
+            </div>
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <code>/delete</code>
+                <div class="description">Test DELETE requests</div>
+            </div>
+            <div class="endpoint">
+                <span class="method patch">PATCH</span>
+                <code>/patch</code>
+                <div class="description">Test PATCH requests with partial data</div>
+            </div>
+            <div class="endpoint">
+                <span class="method head">HEAD</span>
+                <code>/head</code>
+                <div class="description">Test HEAD requests (headers only)</div>
+            </div>
+            <div class="endpoint">
+                <span class="method options">OPTIONS</span>
+                <code>/options</code>
+                <div class="description">Test OPTIONS requests</div>
+            </div>
         </div>
 
-        <h3>Request Inspection</h3>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/headers</code>
-            <div class="description">Return request headers information</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/ip</code>
-            <div class="description">Return client IP address</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/user-agent</code>
-            <div class="description">Return user agent and browser information</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/cookies</code>
-            <div class="description">Return cookies sent by client</div>
+        <h3 class="collapsible">Status Codes</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/status/&lt;code&gt;</code>
+                <div class="description">Return response with specific HTTP status code (e.g., /status/404)</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/status/random</code>
+                <div class="description">Return response with random status code</div>
+            </div>
         </div>
 
-        <h3>Utilities</h3>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/delay/&lt;seconds&gt;</code>
-            <div class="description">Return delayed response (max 60 seconds)</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/json</code>
-            <div class="description">Return sample JSON data</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/xml</code>
-            <div class="description">Return sample XML data</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/html</code>
-            <div class="description">Return sample HTML data</div>
-        </div>
-
-        <h3>System</h3>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/health</code>
-            <div class="description">Health check endpoint</div>
-        </div>
-        <div class="endpoint">
-            <span class="method get">GET</span>
-            <code>/api</code>
-            <div class="description">API information and endpoint list</div>
+        <h3 class="collapsible">Request Inspection</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/headers</code>
+                <div class="description">Return request headers information</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/ip</code>
+                <div class="description">Return client IP address</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/user-agent</code>
+                <div class="description">Return user agent and browser information</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies</code>
+                <div class="description">Return cookies sent by client</div>
+            </div>
         </div>
 
-        <h2>🚀 Quick Start</h2>
-        <p>Try these examples:</p>
-        <ul>
-            <li><a href="/get?param1=value1&param2=value2" target="_blank">/get?param1=value1&param2=value2</a></li>
-            <li><a href="/status/418" target="_blank">/status/418</a> (I'm a teapot!)</li>
-            <li><a href="/delay/3" target="_blank">/delay/3</a></li>
-            <li><a href="/headers" target="_blank">/headers</a></li>
-            <li><a href="/json" target="_blank">/json</a></li>
-        </ul>
+        <h3 class="collapsible">Utilities</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/delay/&lt;seconds&gt;</code>
+                <div class="description">Return delayed response (max 60 seconds)</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/json</code>
+                <div class="description">Return sample JSON data</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/xml</code>
+                <div class="description">Return sample XML data</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/html</code>
+                <div class="description">Return sample HTML data</div>
+            </div>
+        </div>
+
+        <h3 class="collapsible">System</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/health</code>
+                <div class="description">Health check endpoint</div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api</code>
+                <div class="description">API information and endpoint list</div>
+            </div>
+        </div>
+
+        <h2 class="collapsible">🚀 Quick Start</h2>
+        <div class="collapsible-content">
+            <p>Try these examples:</p>
+            <ul>
+                <li><a href="/get?param1=value1&param2=value2" target="_blank">/get?param1=value1&param2=value2</a></li>
+                <li><a href="/status/418" target="_blank">/status/418</a> (I'm a teapot!)</li>
+                <li><a href="/delay/3" target="_blank">/delay/3</a></li>
+                <li><a href="/headers" target="_blank">/headers</a></li>
+                <li><a href="/json" target="_blank">/json</a></li>
+            </ul>
+        </div>
 
         <div class="footer">
-            <p>HTTPilot v{{ version }} - Built with Flask</p>
+            <p>HTTPilot v{{ version }} - Built with Flask by <a href="https://plantree.me">Plantree</a></p>
         </div>
     </div>
+
+    <script>
+        let allCollapsed = false;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all collapsible headers
+            const collapsibles = document.querySelectorAll('.collapsible');
+            
+            collapsibles.forEach(function(collapsible) {
+                // Get the next sibling (content div)
+                const content = collapsible.nextElementSibling;
+                
+                // Set initial max-height for smooth animation
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+                
+                // Add click event listener
+                collapsible.addEventListener('click', function() {
+                    toggleSection(this);
+                });
+            });
+        });
+        
+        function toggleSection(collapsible) {
+            const content = collapsible.nextElementSibling;
+            
+            if (content && content.classList.contains('collapsible-content')) {
+                // Toggle collapsed class on header
+                collapsible.classList.toggle('collapsed');
+                
+                // Toggle content visibility
+                if (content.classList.contains('collapsed')) {
+                    // Show content
+                    content.classList.remove('collapsed');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    // Hide content
+                    content.classList.add('collapsed');
+                    content.style.maxHeight = '0px';
+                }
+            }
+        }
+        
+        function toggleAllSections() {
+            const collapsibles = document.querySelectorAll('.collapsible');
+            const toggleButton = document.querySelector('.toggle-all');
+            
+            allCollapsed = !allCollapsed;
+            
+            collapsibles.forEach(function(collapsible) {
+                const content = collapsible.nextElementSibling;
+                
+                if (content && content.classList.contains('collapsible-content')) {
+                    if (allCollapsed) {
+                        // Collapse all
+                        collapsible.classList.add('collapsed');
+                        content.classList.add('collapsed');
+                        content.style.maxHeight = '0px';
+                    } else {
+                        // Expand all
+                        collapsible.classList.remove('collapsed');
+                        content.classList.remove('collapsed');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                }
+            });
+            
+            // Update button text
+            toggleButton.textContent = allCollapsed ? '展开全部' : '折叠全部';
+        }
+    </script>
 </body>
 </html>
