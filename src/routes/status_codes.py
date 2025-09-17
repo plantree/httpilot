@@ -6,7 +6,7 @@ from werkzeug.exceptions import HTTPException
 bp = Blueprint("status_codes", __name__)
 
 
-@bp.route("/status/<int:code>")
+@bp.route("/status/<int:code>", methods=["GET", "PUT", "PATCH", "POST", "OPTIONS"])
 def status_code(code):
     """Return a response with the specified status code."""
 
@@ -66,10 +66,10 @@ def status_code(code):
         return jsonify(response_data), code
     else:
         # Handle unknown status codes
-        abort(code)
+        abort(400)
 
 
-@bp.route("/status/random")
+@bp.route("/status/random", methods=["GET", "PUT", "PATCH", "POST", "OPTIONS"])
 def random_status():
     """Return a random status code."""
     import random
