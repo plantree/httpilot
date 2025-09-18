@@ -24,12 +24,23 @@ def create_app(config_name="development"):
         app.config.from_object("config.DevelopmentConfig")
 
     # Register blueprints
-    from .routes import main, http_methods, status_codes, inspect
+    from .routes import (
+        main,
+        http_methods,
+        status_codes,
+        request_inspect,
+        resonse_inspect,
+        utils,
+        cookies,
+    )
 
     app.register_blueprint(main.bp)
     app.register_blueprint(http_methods.bp)
     app.register_blueprint(status_codes.bp)
-    app.register_blueprint(inspect.bp)
+    app.register_blueprint(request_inspect.bp)
+    app.register_blueprint(resonse_inspect.bp)
+    app.register_blueprint(utils.bp)
+    app.register_blueprint(cookies.bp)
 
     # Error handlers
     @app.errorhandler(404)

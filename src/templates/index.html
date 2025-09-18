@@ -184,12 +184,8 @@
             </div>
             <div class="endpoint">
                 <span class="method get">GET</span>
-                <span class="method post">POST</span>
-                <span class="method put">PUT</span>
-                <span class="method patch">PATCH</span>
-                <span class="method options">OPTIONS</span>
                 <code>/status/random</code>
-                <div class="description">Return response with random status code. Supports multiple HTTP methods.</div>
+                <div class="description">Return response with random status code. Only supports GET method.</div>
             </div>
         </div>
 
@@ -217,13 +213,22 @@
             </div>
         </div>
 
-        <h3 class="collapsible">Utilities</h3>
+        <h3 class="collapsible">Cookie Management</h3>
         <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
-                <code>/delay/&lt;seconds&gt;</code>
-                <div class="description">Return delayed response (max 60 seconds)</div>
+                <code>/cookies/add</code>
+                <div class="description">Add random cookies to response for testing</div>
             </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies/clear</code>
+                <div class="description">Clear all cookies from client</div>
+            </div>
+        </div>
+
+        <h3 class="collapsible">Response Inspection</h3>
+        <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
                 <code>/json</code>
@@ -238,6 +243,15 @@
                 <span class="method get">GET</span>
                 <code>/html</code>
                 <div class="description">Return sample HTML data</div>
+            </div>
+        </div>
+
+        <h3 class="collapsible">Utilities</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/delay/&lt;seconds&gt;</code>
+                <div class="description">Return delayed response (max 60 seconds)</div>
             </div>
         </div>
 
@@ -261,8 +275,11 @@
             <ul>
                 <li><a href="/get?param1=value1&param2=value2" target="_blank">/get?param1=value1&param2=value2</a></li>
                 <li><a href="/status/418" target="_blank">/status/418</a> (I'm a teapot!)</li>
+                <li><a href="/status/random" target="_blank">/status/random</a></li>
                 <li><a href="/delay/3" target="_blank">/delay/3</a></li>
                 <li><a href="/headers" target="_blank">/headers</a></li>
+                <li><a href="/cookies/add" target="_blank">/cookies/add</a> (Add random cookies)</li>
+                <li><a href="/cookies" target="_blank">/cookies</a> (View current cookies)</li>
                 <li><a href="/json" target="_blank">/json</a></li>
             </ul>
         </div>

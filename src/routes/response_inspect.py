@@ -1,79 +1,9 @@
-"""Request inspection routes."""
+"""Response inspection routes."""
 
-from flask import Blueprint, request, jsonify
-import time
+from flask import Blueprint, request, jsonify, make_response
 from datetime import datetime
 
-bp = Blueprint("inspect", __name__)
-
-
-@bp.route("/headers")
-def get_headers():
-    """Return request headers."""
-    return jsonify(
-        {"headers": dict(request.headers), "method": request.method, "url": request.url}
-    )
-
-
-@bp.route("/ip")
-def get_ip():
-    """Return client IP address."""
-    # Try to get real IP from proxy headers
-    real_ip = (
-        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        or request.headers.get("X-Real-IP")
-        or request.environ.get("REMOTE_ADDR")
-    )
-
-    return jsonify(
-        {
-            "origin": real_ip,
-            "headers": {
-                "X-Forwarded-For": request.headers.get("X-Forwarded-For"),
-                "X-Real-IP": request.headers.get("X-Real-IP"),
-                "Remote-Addr": request.environ.get("REMOTE_ADDR"),
-            },
-        }
-    )
-
-
-@bp.route("/user-agent")
-def get_user_agent():
-    """Return user agent information."""
-    return jsonify(
-        {
-            "user-agent": request.headers.get("User-Agent", "Unknown"),
-            "accept": request.headers.get("Accept", ""),
-            "accept-language": request.headers.get("Accept-Language", ""),
-            "accept-encoding": request.headers.get("Accept-Encoding", ""),
-        }
-    )
-
-
-@bp.route("/cookies")
-def get_cookies():
-    """Return cookies."""
-    return jsonify({"cookies": dict(request.cookies)})
-
-
-@bp.route("/delay/<int:seconds>")
-def delay_response(seconds):
-    """Return a delayed response."""
-    if seconds > 60:
-        return jsonify({"error": "Maximum delay is 60 seconds"}), 400
-
-    start_time = time.time()
-    time.sleep(seconds)
-    end_time = time.time()
-
-    return jsonify(
-        {
-            "delay": seconds,
-            "actual_delay": round(end_time - start_time, 3),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-            "message": f"Delayed response after {seconds} seconds",
-        }
-    )
+bp = Blueprint("response_inspect", __name__)
 
 
 @bp.route("/json")

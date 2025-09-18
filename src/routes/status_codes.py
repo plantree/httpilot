@@ -69,7 +69,7 @@ def status_code(code):
         abort(400)
 
 
-@bp.route("/status/random", methods=["GET", "PUT", "PATCH", "POST", "OPTIONS"])
+@bp.route("/status/random", methods=["GET"])
 def random_status():
     """Return a random status code."""
     import random
