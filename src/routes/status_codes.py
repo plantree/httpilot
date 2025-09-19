@@ -3,6 +3,8 @@
 from flask import Blueprint, jsonify, abort
 from werkzeug.exceptions import HTTPException
 
+from .utils import utcnow
+
 bp = Blueprint("status_codes", __name__)
 
 
@@ -48,6 +50,7 @@ def status_code(code):
         "status": code,
         "message": description,
         "description": f"This is a {code} {description} response from HTTPilot",
+        "timestamp": utcnow(),
     }
 
     # For 204 No Content, return empty response

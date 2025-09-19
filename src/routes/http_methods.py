@@ -1,8 +1,8 @@
 """HTTP methods testing routes."""
 
 from flask import Blueprint, request, jsonify
-from datetime import datetime
-import json
+
+from .utils import utcnow
 
 bp = Blueprint("http_methods", __name__)
 
@@ -15,7 +15,7 @@ def get_request_info():
         "args": dict(request.args),
         "headers": dict(request.headers),
         "origin": request.environ.get("REMOTE_ADDR"),
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": utcnow(),
     }
 
 

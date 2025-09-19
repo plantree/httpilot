@@ -1,7 +1,8 @@
 """Cookie manipulation routes."""
 
 from flask import Blueprint, request, jsonify, make_response
-from datetime import datetime
+
+from .utils import utcnow
 
 bp = Blueprint("cookies", __name__)
 
@@ -10,10 +11,7 @@ bp = Blueprint("cookies", __name__)
 def view_cookies():
     """Return cookie data."""
     cookies = dict(request.cookies.items())
-    response_data = {
-        "cookies": cookies,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
-    }
+    response_data = {"cookies": cookies, "timestamp": utcnow()}
     return make_response(jsonify(response_data))
 
 
@@ -33,7 +31,7 @@ def mock_cookies():
     response_data = {
         "message": "Random cookies added successfully",
         "cookies_set": {"token": token},
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": utcnow(),
     }
 
     response = make_response(jsonify(response_data))
@@ -54,7 +52,7 @@ def clear_cookies():
         "message": "All cookies cleared successfully",
         "cookies_cleared": list(current_cookies.keys()) if current_cookies else [],
         "count": len(current_cookies),
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": utcnow(),
     }
 
     response = make_response(jsonify(response_data))

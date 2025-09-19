@@ -1,7 +1,12 @@
 """Response inspection routes."""
 
 from flask import Blueprint, request, jsonify, make_response
-from datetime import datetime
+from werkzeug.http import http_date
+import uuid
+
+from .utils import utcnow
+from .status_codes import status_code
+
 
 bp = Blueprint("response_inspect", __name__)
 
@@ -20,7 +25,7 @@ def return_json():
                 "Request inspection",
                 "Response formatting",
             ],
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": utcnow(),
             "sample_data": {
                 "number": 42,
                 "boolean": True,
@@ -47,7 +52,7 @@ def return_xml():
     </features>
     <timestamp>{}</timestamp>
 </httpilot>""".format(
-        datetime.utcnow().isoformat() + "Z"
+        utcnow()
     )
 
     response = jsonify(xml_data)
@@ -76,7 +81,7 @@ def return_html():
     <p>Generated at: {}</p>
 </body>
 </html>""".format(
-        datetime.utcnow().isoformat() + "Z"
+        utcnow()
     )
 
     response = jsonify(html_data)
@@ -89,24 +94,40 @@ def response_headers():
     """Returns a set of response headers from the query string."""
     # Common headers that should be treated specially
     headers = {}
-    
+
     # Process query parameters as headers
     for key, value in request.args.items():
         headers[key.capitalize()] = value
-    
+
     # Response data showing what headers were set
     response_data = {
         "message": "Custom response headers set",
         "headers_set": headers,
         "usage": "Add query parameters to set response headers. Example: /response-headers?X-Custom=value&Server=HTTPilot",
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": utcnow(),
     }
-    
+
     # Create response
     response = make_response(jsonify(response_data))
-    
+
     # Set all custom headers
     for header_name, header_value in headers.items():
         response.headers.add(header_name, header_value)
 
     return response
+
+
+@bp.route("/cache", methods=["GET"])
+def cache():
+    """Returns a 304 if an `If-Modified-Since` header or `If-None-Match` is present."""
+    is_conditional = request.headers.get("If-Modified-Since") or request.headers.get(
+        "If-None-Match"
+    )
+
+    if is_conditional is None:
+        response_data = {"timestamp": utcnow(), "message": "Returns with no cache"}
+        response = make_response(jsonify(response_data))
+        response.headers["Last-Modified"] = http_date()
+        response.headers["ETag"] = uuid.uuid4().hex
+        return response
+    return status_code(304)

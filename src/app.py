@@ -30,8 +30,8 @@ def create_app(config_name="development"):
         status_codes,
         request_inspect,
         response_inspect,
-        utils,
         cookies,
+        utilities,
     )
 
     app.register_blueprint(main.bp)
@@ -39,7 +39,7 @@ def create_app(config_name="development"):
     app.register_blueprint(status_codes.bp)
     app.register_blueprint(request_inspect.bp)
     app.register_blueprint(response_inspect.bp)
-    app.register_blueprint(utils.bp)
+    app.register_blueprint(utilities.bp)
     app.register_blueprint(cookies.bp)
 
     # Error handlers
