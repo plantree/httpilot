@@ -6,6 +6,17 @@ from datetime import datetime
 bp = Blueprint("cookies", __name__)
 
 
+@bp.route("/cookies", methods=["GET"])
+def view_cookies():
+    """Return cookie data."""
+    cookies = dict(request.cookies.items())
+    response_data = {
+        "cookies": cookies,
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
+    return make_response(jsonify(response_data))
+
+
 @bp.route("/cookies/add", methods=["GET"])
 def mock_cookies():
     """Add mock cookies with random values to the response."""
@@ -15,10 +26,6 @@ def mock_cookies():
     # Generate random cookie values
     def generate_random_string(length=12):
         return "".join(random.choices(string.ascii_letters + string.digits, k=length))
-
-    # Random preferences
-    languages = ["en-US", "zh-CN", "ja-JP", "ko-KR", "fr-FR", "de-DE", "es-ES"]
-    themes = ["light", "dark", "auto", "blue", "green"]
 
     # Generate random cookie data
     token = generate_random_string(32)

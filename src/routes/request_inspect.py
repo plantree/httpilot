@@ -46,9 +46,3 @@ def get_user_agent():
             "accept-encoding": request.headers.get("Accept-Encoding", ""),
         }
     )
-
-
-@bp.route("/cookies", methods=["GET"])
-def get_cookies():
-    """Return cookies."""
-    return jsonify({"cookies": dict(request.cookies)})

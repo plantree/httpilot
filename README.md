@@ -7,10 +7,12 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 ## Features
 
 - **HTTP Methods Testing**: Test GET, POST, PUT, DELETE, PATCH, HEAD, and OPTIONS requests
-- **Status Code Testing**: Return responses with specific HTTP status codes
+- **Status Code Testing**: Return responses with specific HTTP status codes (supports multiple methods)
 - **Request Inspection**: Analyze request headers, IP addresses, user agents, and cookies
-- **Response Utilities**: Generate JSON, XML, HTML responses and delayed responses
-- **Web Interface**: Clean HTML interface for easy endpoint exploration
+- **Cookie Management**: Add random test cookies and clear existing cookies
+- **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers
+- **Utilities**: Delayed responses for testing timeout scenarios
+- **Web Interface**: Clean HTML interface with collapsible sections for easy endpoint exploration
 
 ## Quick Start
 
@@ -59,7 +61,7 @@ The application will be available at `http://localhost:5000`
 - `OPTIONS /options` - Test OPTIONS requests
 
 ### Status Codes
-- `GET /status/<code>` - Return response with specific HTTP status code
+- `GET|POST|PUT|PATCH|OPTIONS /status/<code>` - Return response with specific HTTP status code
 - `GET /status/random` - Return response with random status code
 
 ### Request Inspection
@@ -68,11 +70,18 @@ The application will be available at `http://localhost:5000`
 - `GET /user-agent` - Return user agent and browser information
 - `GET /cookies` - Return cookies sent by client
 
-### Utilities
-- `GET /delay/<seconds>` - Return delayed response (max 60 seconds)
+### Cookie Management
+- `GET /cookies/add` - Add random test cookies to response
+- `GET /cookies/clear` - Clear all cookies from client
+
+### Response Inspection
 - `GET /json` - Return sample JSON data
 - `GET /xml` - Return sample XML data
 - `GET /html` - Return sample HTML data
+- `GET|POST /response-headers` - Set custom response headers via query parameters
+
+### Utilities
+- `GET /delay/<seconds>` - Return delayed response (max 60 seconds)
 
 ### System
 - `GET /health` - Health check endpoint
@@ -92,10 +101,32 @@ curl -X POST http://localhost:5000/post \
   -d '{"key": "value", "number": 42}'
 ```
 
-### Testing status codes
+### Testing status codes with different methods
 ```bash
 curl http://localhost:5000/status/404
-curl http://localhost:5000/status/418  # I'm a teapot!
+curl -X POST http://localhost:5000/status/418  # I'm a teapot!
+curl http://localhost:5000/status/random
+```
+
+### Testing cookie management
+```bash
+# Add random cookies
+curl -c cookies.txt http://localhost:5000/cookies/add
+
+# View current cookies
+curl -b cookies.txt http://localhost:5000/cookies
+
+# Clear all cookies
+curl -c cookies.txt http://localhost:5000/cookies/clear
+```
+
+### Testing custom response headers
+```bash
+# Set custom headers via query parameters
+curl -i "http://localhost:5000/response-headers?X-Custom=test&Server=HTTPilot"
+
+# Using POST method
+curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
 ```
 
 ### Testing delayed responses
@@ -149,7 +180,10 @@ httpilot/
 │   │   ├── main.py          # Main routes
 │   │   ├── http_methods.py  # HTTP method testing routes
 │   │   ├── status_codes.py  # Status code routes
-│   │   └── inspect.py       # Request inspection routes
+│   │   ├── request_inspect.py # Request inspection routes
+│   │   ├── response_inspect.py # Response inspection routes
+│   │   ├── cookies.py       # Cookie management routes
+│   │   └── utils.py         # Utility routes
 │   ├── static/              # Static files (CSS, JS, images)
 │   └── templates/           # Jinja2 templates
 │       └── index.html
@@ -159,7 +193,9 @@ httpilot/
 │   ├── test_basic.py        # Basic functionality tests
 │   ├── test_http_methods.py # HTTP methods tests
 │   ├── test_status_codes.py # Status codes tests
-│   └── test_inspect.py      # Request inspection tests
+│   ├── test_request_inspect.py # Request inspection tests
+│   ├── test_response_inspect.py # Response inspection tests
+│   └── test_cookies.py      # Cookie management tests
 ├── config/                  # Configuration files
 ├── config.py               # Application configuration
 ├── wsgi.py                 # WSGI entry point

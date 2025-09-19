@@ -82,3 +82,31 @@ def return_html():
     response = jsonify(html_data)
     response.headers["Content-Type"] = "text/html"
     return response
+
+
+@bp.route("/response-headers", methods=["GET", "POST"])
+def response_headers():
+    """Returns a set of response headers from the query string."""
+    # Common headers that should be treated specially
+    headers = {}
+    
+    # Process query parameters as headers
+    for key, value in request.args.items():
+        headers[key.capitalize()] = value
+    
+    # Response data showing what headers were set
+    response_data = {
+        "message": "Custom response headers set",
+        "headers_set": headers,
+        "usage": "Add query parameters to set response headers. Example: /response-headers?X-Custom=value&Server=HTTPilot",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
+    
+    # Create response
+    response = make_response(jsonify(response_data))
+    
+    # Set all custom headers
+    for header_name, header_value in headers.items():
+        response.headers.add(header_name, header_value)
+
+    return response

@@ -29,7 +29,7 @@ def create_app(config_name="development"):
         http_methods,
         status_codes,
         request_inspect,
-        resonse_inspect,
+        response_inspect,
         utils,
         cookies,
     )
@@ -38,7 +38,7 @@ def create_app(config_name="development"):
     app.register_blueprint(http_methods.bp)
     app.register_blueprint(status_codes.bp)
     app.register_blueprint(request_inspect.bp)
-    app.register_blueprint(resonse_inspect.bp)
+    app.register_blueprint(response_inspect.bp)
     app.register_blueprint(utils.bp)
     app.register_blueprint(cookies.bp)
 
