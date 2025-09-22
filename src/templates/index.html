@@ -304,6 +304,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <h3 class="collapsible">Cookie Management</h3>
+        <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
                 <code>/cookies</code>
@@ -314,10 +318,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <h3 class="collapsible">Cookie Management</h3>
-        <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
                 <code>/cookies/add</code>
@@ -383,6 +383,58 @@
                     </div>
                     <div class="curl-command">
                         <span class="method-label">POST:</span>curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="collapsible">Cache Testing</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cache</code>
+                <div class="description">Test HTTP caching. Returns 304 (Not Modified) if If-Modified-Since or If-None-Match headers are present, otherwise returns data with Last-Modified and ETag headers.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/cache"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Conditional:</span>curl -H "If-Modified-Since: Thu, 01 Jan 1970 00:00:00 GMT" "http://localhost:5000/cache"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">ETag:</span>curl -H "If-None-Match: some-etag" "http://localhost:5000/cache"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cache/&lt;seconds&gt;</code>
+                <div class="description">Set Cache-Control header for specified number of seconds (e.g., /cache/300 for 5 minutes).</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -i "http://localhost:5000/cache/300"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">1 hour:</span>curl -i "http://localhost:5000/cache/3600"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/etag/&lt;etag&gt;</code>
+                <div class="description">Test ETag handling. Returns 304 if If-None-Match matches, 412 if If-Match doesn't match (and not wildcard), otherwise returns normal response with the specified ETag.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/etag/test123"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Match:</span>curl -H "If-None-Match: test123" "http://localhost:5000/etag/test123"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Wildcard:</span>curl -H "If-None-Match: *" "http://localhost:5000/etag/test123"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">If-Match:</span>curl -H "If-Match: other-etag" "http://localhost:5000/etag/test123"
                     </div>
                 </div>
             </div>

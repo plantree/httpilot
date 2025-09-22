@@ -4,15 +4,24 @@
 
 HTTPilot is a Flask-based HTTP testing service that helps developers understand HTTP by providing various endpoints to test different HTTP methods, status codes, and request/response scenarios.
 
+## Status
+
+✅ **Fully Functional** - All features implemented and tested  
+✅ **Import Issues Fixed** - All module imports working correctly  
+✅ **Interactive Web Interface** - Complete with curl examples for each endpoint  
+✅ **Version Management** - Automated versioning with setuptools_scm  
+
 ## Features
 
-- **HTTP Methods Testing**: Test GET, POST, PUT, DELETE, PATCH, HEAD, and OPTIONS requests
+- **HTTP Methods Testing**: Test GET, POST, PUT, DELETE, PATCH, HEAD, and OPTIONS requests with detailed curl examples
 - **Status Code Testing**: Return responses with specific HTTP status codes (supports multiple methods)
-- **Request Inspection**: Analyze request headers, IP addresses, user agents, and cookies
-- **Cookie Management**: Add random test cookies and clear existing cookies
-- **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers
+- **Request Inspection**: Analyze request headers, IP addresses, and user agents
+- **Cookie Management**: View, add random test cookies, and clear existing cookies for testing
+- **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers via query parameters
+- **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
 - **Utilities**: Delayed responses for testing timeout scenarios
-- **Web Interface**: Clean HTML interface with collapsible sections for easy endpoint exploration
+- **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
+- **Version Management**: Automated version control using setuptools_scm and Git tags
 
 ## Quick Start
 
@@ -68,9 +77,9 @@ The application will be available at `http://localhost:5000`
 - `GET /headers` - Return request headers information
 - `GET /ip` - Return client IP address
 - `GET /user-agent` - Return user agent and browser information
-- `GET /cookies` - Return cookies sent by client
 
 ### Cookie Management
+- `GET /cookies` - Return cookies sent by client
 - `GET /cookies/add` - Add random test cookies to response
 - `GET /cookies/clear` - Clear all cookies from client
 
@@ -79,6 +88,11 @@ The application will be available at `http://localhost:5000`
 - `GET /xml` - Return sample XML data
 - `GET /html` - Return sample HTML data
 - `GET|POST /response-headers` - Set custom response headers via query parameters
+
+### Cache Testing
+- `GET /cache` - Test HTTP caching (returns 304 if If-Modified-Since or If-None-Match headers present)
+- `GET /cache/<seconds>` - Set Cache-Control header for specified seconds
+- `GET /etag/<etag>` - Test ETag handling with If-None-Match and If-Match headers
 
 ### Utilities
 - `GET /delay/<seconds>` - Return delayed response (max 60 seconds)
@@ -127,6 +141,36 @@ curl -i "http://localhost:5000/response-headers?X-Custom=test&Server=HTTPilot"
 
 # Using POST method
 curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
+```
+
+### Testing HTTP caching
+```bash
+# Basic cache test (first request - returns data with cache headers)
+curl -i http://localhost:5000/cache
+
+# Conditional request with If-Modified-Since (returns 304 Not Modified)
+curl -i -H "If-Modified-Since: Thu, 01 Jan 1970 00:00:00 GMT" http://localhost:5000/cache
+
+# Conditional request with If-None-Match (returns 304 Not Modified)
+curl -i -H "If-None-Match: some-etag" http://localhost:5000/cache
+
+# Set Cache-Control header for 5 minutes
+curl -i http://localhost:5000/cache/300
+
+# Set Cache-Control header for 1 hour
+curl -i http://localhost:5000/cache/3600
+
+# Test ETag handling
+curl -i http://localhost:5000/etag/test123
+
+# Test ETag with If-None-Match (returns 304 if matches)
+curl -i -H "If-None-Match: test123" http://localhost:5000/etag/test123
+
+# Test ETag with wildcard If-None-Match (returns 304)
+curl -i -H "If-None-Match: *" http://localhost:5000/etag/test123
+
+# Test ETag with If-Match (returns 412 if doesn't match)
+curl -i -H "If-Match: other-etag" http://localhost:5000/etag/test123
 ```
 
 ### Testing delayed responses
@@ -183,7 +227,8 @@ httpilot/
 │   │   ├── request_inspect.py # Request inspection routes
 │   │   ├── response_inspect.py # Response inspection routes
 │   │   ├── cookies.py       # Cookie management routes
-│   │   └── utils.py         # Utility routes
+│   │   ├── utilities.py     # Utility routes (delay, etc.)
+│   │   └── utils.py         # Shared utility functions
 │   ├── static/              # Static files (CSS, JS, images)
 │   └── templates/           # Jinja2 templates
 │       └── index.html
@@ -223,6 +268,32 @@ docker build -t httpilot .
 
 # Run container
 docker run -p 5000:5000 httpilot
+```
+
+## Troubleshooting
+
+### Import Errors
+If you encounter import errors when running the application, ensure you're using the correct Python path:
+
+```bash
+# Run from the project root directory
+cd httpilot
+python -m src.app
+
+# Or use the make command
+make run
+```
+
+### Common Issues
+1. **ModuleNotFoundError**: Make sure you're in the correct directory and have activated your virtual environment
+2. **Port already in use**: Change the port in `config.py` or kill the process using the port
+3. **Missing dependencies**: Run `pip install -r requirements.txt`
+
+### Development Setup
+For development, ensure all relative imports are working correctly. The project uses relative imports within the `src/routes/` package:
+```python
+# Correct import style in route files
+from .utils import utcnow
 ```
 
 ## Configuration

@@ -36,18 +36,37 @@ def api_info():
                     "/head": "HEAD request testing",
                     "/options": "OPTIONS request testing",
                 },
-                "Status Codes": {"/status/<code>": "Return specific HTTP status code"},
+                "Status Codes": {
+                    "/status/<code>": "Return specific HTTP status code (supports GET, POST, PUT, PATCH, OPTIONS)",
+                    "/status/random": "Return random HTTP status code (GET only)",
+                },
                 "Request Inspection": {
                     "/headers": "Return request headers",
                     "/ip": "Return client IP address",
-                    "/user-agent": "Return user agent",
-                    "/cookies": "Return cookies",
+                    "/user-agent": "Return user agent information",
+                },
+                "Cookie Management": {
+                    "/cookies": "Return cookies sent by client",
+                    "/cookies/add": "Add random test cookies to response",
+                    "/cookies/clear": "Clear all cookies from client",
+                },
+                "Response Inspection": {
+                    "/json": "Return sample JSON data",
+                    "/xml": "Return sample XML data",
+                    "/html": "Return sample HTML data",
+                    "/response-headers": "Set custom response headers via query parameters (GET, POST)",
+                },
+                "Cache Testing": {
+                    "/cache": "Test HTTP caching (returns 304 if If-Modified-Since or If-None-Match headers present)",
+                    "/cache/<seconds>": "Set Cache-Control header for specified seconds",
+                    "/etag/<etag>": "Test ETag handling with If-None-Match and If-Match headers",
                 },
                 "Utilities": {
-                    "/delay/<seconds>": "Delayed response",
-                    "/json": "Return JSON data",
-                    "/xml": "Return XML data",
-                    "/html": "Return HTML data",
+                    "/delay/<seconds>": "Return delayed response (max 60 seconds)",
+                },
+                "System": {
+                    "/health": "Health check endpoint",
+                    "/api": "API information and endpoint list",
                 },
             },
         }

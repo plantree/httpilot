@@ -32,6 +32,7 @@ def create_app(config_name="development"):
         response_inspect,
         cookies,
         utilities,
+        cache,
     )
 
     app.register_blueprint(main.bp)
@@ -41,6 +42,7 @@ def create_app(config_name="development"):
     app.register_blueprint(response_inspect.bp)
     app.register_blueprint(utilities.bp)
     app.register_blueprint(cookies.bp)
+    app.register_blueprint(cache.bp)
 
     # Error handlers
     @app.errorhandler(404)

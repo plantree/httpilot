@@ -1,11 +1,6 @@
 """Response inspection routes."""
 
 from flask import Blueprint, request, jsonify, make_response
-from werkzeug.http import http_date
-import uuid
-
-from .utils import utcnow
-from .status_codes import status_code
 
 
 bp = Blueprint("response_inspect", __name__)
@@ -115,19 +110,3 @@ def response_headers():
         response.headers.add(header_name, header_value)
 
     return response
-
-
-@bp.route("/cache", methods=["GET"])
-def cache():
-    """Returns a 304 if an `If-Modified-Since` header or `If-None-Match` is present."""
-    is_conditional = request.headers.get("If-Modified-Since") or request.headers.get(
-        "If-None-Match"
-    )
-
-    if is_conditional is None:
-        response_data = {"timestamp": utcnow(), "message": "Returns with no cache"}
-        response = make_response(jsonify(response_data))
-        response.headers["Last-Modified"] = http_date()
-        response.headers["ETag"] = uuid.uuid4().hex
-        return response
-    return status_code(304)
