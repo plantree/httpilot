@@ -6,3 +6,6 @@ python-dotenv==1.0.0
 pytest==7.4.2
 pytest-cov==4.1.0
 setuptools_scm[toml]==8.0.4
+brotli==1.1.0
+decorator==5.2.1
+six==1.17.0

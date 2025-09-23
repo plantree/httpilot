@@ -62,3 +62,6 @@ def clear_cookies():
         response.set_cookie(cookie_name, "", expires=0)
 
     return response
+
+
+# TODO

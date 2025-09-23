@@ -30,6 +30,7 @@ def create_app(config_name="development"):
         status_codes,
         request_inspect,
         response_inspect,
+        response_format,
         cookies,
         utilities,
         cache,
@@ -40,6 +41,7 @@ def create_app(config_name="development"):
     app.register_blueprint(status_codes.bp)
     app.register_blueprint(request_inspect.bp)
     app.register_blueprint(response_inspect.bp)
+    app.register_blueprint(response_format.bp)
     app.register_blueprint(utilities.bp)
     app.register_blueprint(cookies.bp)
     app.register_blueprint(cache.bp)

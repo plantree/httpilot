@@ -1,8 +1,6 @@
 """Request inspection routes."""
 
-from flask import Blueprint, request, jsonify, make_response
-import time
-from datetime import datetime
+from flask import Blueprint, request, jsonify
 
 bp = Blueprint("request_inspect", __name__)
 
