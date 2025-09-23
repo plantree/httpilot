@@ -56,13 +56,20 @@ def api_info():
                     "/html": "Return sample HTML data",
                     "/response-headers": "Set custom response headers via query parameters (GET, POST)",
                 },
+                "Response Formats & Encoding": {
+                    "/robots.txt": "Return robots.txt file",
+                    "/brotli": "Return Brotli-compressed response",
+                    "/deflate": "Return Deflate-compressed response",
+                    "/gzip": "Return GZip-compressed response",
+                    "/encoding/utf8": "Return UTF-8 encoded content",
+                },
                 "Cache Testing": {
                     "/cache": "Test HTTP caching (returns 304 if If-Modified-Since or If-None-Match headers present)",
                     "/cache/<seconds>": "Set Cache-Control header for specified seconds",
                     "/etag/<etag>": "Test ETag handling with If-None-Match and If-Match headers",
                 },
-                "Utilities": {
-                    "/delay/<seconds>": "Return delayed response (max 60 seconds)",
+                "Dynamic Data": {
+                    "/delay/<seconds>": "Return delayed response with timing information (max 60 seconds)",
                 },
                 "System": {
                     "/health": "Health check endpoint",

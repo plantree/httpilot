@@ -5,7 +5,7 @@ from . import http_methods
 from . import status_codes
 from . import request_inspect
 from . import response_inspect
-from . import utilities
+from . import dynamic_data
 
 
 __all__ = [
@@ -14,5 +14,5 @@ __all__ = [
     "status_codes",
     "request_inspect",
     "response_inspect",
-    "utilities",
+    "dynamic_data",
 ]

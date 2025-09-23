@@ -18,8 +18,9 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 - **Request Inspection**: Analyze request headers, IP addresses, and user agents
 - **Cookie Management**: View, add random test cookies, and clear existing cookies for testing
 - **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers via query parameters
+- **Response Formats & Encoding**: Test various response formats and compression algorithms (Brotli, GZip, Deflate, UTF-8)
 - **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
-- **Utilities**: Delayed responses for testing timeout scenarios
+- **Dynamic Data**: Time-sensitive responses with delays and timing information for testing timeout scenarios
 - **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
 - **Version Management**: Automated version control using setuptools_scm and Git tags
 
@@ -89,13 +90,20 @@ The application will be available at `http://localhost:5000`
 - `GET /html` - Return sample HTML data
 - `GET|POST /response-headers` - Set custom response headers via query parameters
 
+### Response Formats & Encoding
+- `GET /robots.txt` - Return robots.txt file with crawling rules
+- `GET /brotli` - Return Brotli-compressed response data
+- `GET /deflate` - Return Deflate-compressed response data
+- `GET /gzip` - Return GZip-compressed response data
+- `GET /encoding/utf8` - Return UTF-8 encoded content with international characters
+
 ### Cache Testing
 - `GET /cache` - Test HTTP caching (returns 304 if If-Modified-Since or If-None-Match headers present)
 - `GET /cache/<seconds>` - Set Cache-Control header for specified seconds
 - `GET /etag/<etag>` - Test ETag handling with If-None-Match and If-Match headers
 
-### Utilities
-- `GET /delay/<seconds>` - Return delayed response (max 60 seconds)
+### Dynamic Data
+- `GET /delay/<seconds>` - Return delayed response with timing information (max 60 seconds)
 
 ### System
 - `GET /health` - Health check endpoint
@@ -143,6 +151,30 @@ curl -i "http://localhost:5000/response-headers?X-Custom=test&Server=HTTPilot"
 curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
 ```
 
+### Testing response formats and encoding
+```bash
+# Get robots.txt file
+curl http://localhost:5000/robots.txt
+
+# Test compression formats (note: responses are automatically compressed)
+curl -H "Accept-Encoding: gzip" http://localhost:5000/gzip
+curl -H "Accept-Encoding: deflate" http://localhost:5000/deflate
+curl -H "Accept-Encoding: br" http://localhost:5000/brotli
+
+# Test with verbose output to see compression headers
+curl -v -H "Accept-Encoding: gzip" http://localhost:5000/gzip
+curl -v -H "Accept-Encoding: deflate" http://localhost:5000/deflate
+curl -v -H "Accept-Encoding: br" http://localhost:5000/brotli
+
+# Test UTF-8 encoding
+curl http://localhost:5000/encoding/utf8
+
+# Test decompression (pipe to file and check size)
+curl -H "Accept-Encoding: gzip" http://localhost:5000/gzip > gzip_response.json
+curl -H "Accept-Encoding: deflate" http://localhost:5000/deflate > deflate_response.json
+curl -H "Accept-Encoding: br" http://localhost:5000/brotli > brotli_response.json
+```
+
 ### Testing HTTP caching
 ```bash
 # Basic cache test (first request - returns data with cache headers)
@@ -173,9 +205,25 @@ curl -i -H "If-None-Match: *" http://localhost:5000/etag/test123
 curl -i -H "If-Match: other-etag" http://localhost:5000/etag/test123
 ```
 
-### Testing delayed responses
+### Testing dynamic data and delayed responses
 ```bash
+# Basic delay test (3 seconds)
 curl http://localhost:5000/delay/3
+
+# Test with timing measurement
+time curl http://localhost:5000/delay/5
+
+# Longer delay test (10 seconds)
+curl http://localhost:5000/delay/10
+
+# Maximum allowed delay (60 seconds)
+curl http://localhost:5000/delay/60
+
+# Test error handling (exceeds 60 second limit)
+curl http://localhost:5000/delay/120
+
+# JSON output shows timing details
+curl -s http://localhost:5000/delay/2 | python -m json.tool
 ```
 
 ### Inspecting request headers

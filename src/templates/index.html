@@ -344,36 +344,6 @@
         <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
-                <code>/json</code>
-                <div class="description">Return sample JSON data</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl "http://localhost:5000/json"
-                    </div>
-                </div>
-            </div>
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/xml</code>
-                <div class="description">Return sample XML data</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl "http://localhost:5000/xml"
-                    </div>
-                </div>
-            </div>
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/html</code>
-                <div class="description">Return sample HTML data</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl "http://localhost:5000/html"
-                    </div>
-                </div>
-            </div>
-            <div class="endpoint">
-                <span class="method get">GET</span>
                 <span class="method post">POST</span>
                 <code>/response-headers</code>
                 <div class="description">Set custom response headers via query parameters</div>
@@ -383,6 +353,108 @@
                     </div>
                     <div class="curl-command">
                         <span class="method-label">POST:</span>curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="collapsible">Response Formats & Encoding</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/json</code>
+                <div class="description">Return sample JSON data with various data types</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/json"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Pretty:</span>curl -s "http://localhost:5000/json" | python -m json.tool
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/xml</code>
+                <div class="description">Return sample XML data with proper XML structure</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/xml"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Headers:</span>curl -i "http://localhost:5000/xml"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/html</code>
+                <div class="description">Return sample HTML data with proper HTML structure</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/html"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Headers:</span>curl -i "http://localhost:5000/html"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/robots.txt</code>
+                <div class="description">Return robots.txt file with crawling rules</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/robots.txt"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/brotli</code>
+                <div class="description">Return Brotli-compressed response data (requires Accept-Encoding: br)</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -H "Accept-Encoding: br" "http://localhost:5000/brotli"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: br" "http://localhost:5000/brotli"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/deflate</code>
+                <div class="description">Return Deflate-compressed response data (requires Accept-Encoding: deflate)</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -H "Accept-Encoding: deflate" "http://localhost:5000/deflate"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: deflate" "http://localhost:5000/deflate"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/gzip</code>
+                <div class="description">Return GZip-compressed response data (requires Accept-Encoding: gzip)</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -H "Accept-Encoding: gzip" "http://localhost:5000/gzip"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: gzip" "http://localhost:5000/gzip"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/encoding/utf8</code>
+                <div class="description">Return UTF-8 encoded content with international characters</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/encoding/utf8"
                     </div>
                 </div>
             </div>
@@ -440,15 +512,27 @@
             </div>
         </div>
 
-        <h3 class="collapsible">Utilities</h3>
+        <h3 class="collapsible">Dynamic Data</h3>
         <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
                 <code>/delay/&lt;seconds&gt;</code>
-                <div class="description">Return delayed response (max 60 seconds)</div>
+                <div class="description">Return delayed response with timing information. Maximum delay is 60 seconds. Response includes actual delay time and timestamps.</div>
                 <div class="curl-examples">
                     <div class="curl-command">
                         <span class="method-label">GET:</span>curl "http://localhost:5000/delay/3"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">10 sec:</span>curl "http://localhost:5000/delay/10"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Timing:</span>time curl "http://localhost:5000/delay/5"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Max:</span>curl "http://localhost:5000/delay/60"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Error:</span>curl "http://localhost:5000/delay/120"
                     </div>
                 </div>
             </div>

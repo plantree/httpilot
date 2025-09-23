@@ -1,4 +1,4 @@
-"""Utilities routes."""
+"""Dynamic data routes."""
 
 from flask import Blueprint, request, jsonify, make_response
 import time
@@ -6,7 +6,7 @@ from datetime import datetime
 
 from .utils import utcnow
 
-bp = Blueprint("utilities", __name__)
+bp = Blueprint("dynamic_data", __name__)
 
 
 @bp.route("/delay/<int:seconds>")
@@ -27,3 +27,6 @@ def delay_response(seconds):
             "message": f"Delayed response after {seconds} seconds",
         }
     )
+
+
+# TODO
