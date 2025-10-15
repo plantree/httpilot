@@ -21,16 +21,7 @@ def get_ip():
         or request.environ.get("REMOTE_ADDR")
     )
 
-    return jsonify(
-        {
-            "origin": real_ip,
-            "headers": {
-                "X-Forwarded-For": request.headers.get("X-Forwarded-For"),
-                "X-Real-IP": request.headers.get("X-Real-IP"),
-                "Remote-Addr": request.environ.get("REMOTE_ADDR"),
-            },
-        }
-    )
+    return jsonify({"origin": real_ip})
 
 
 @bp.route("/user-agent")
@@ -39,8 +30,5 @@ def get_user_agent():
     return jsonify(
         {
             "user-agent": request.headers.get("User-Agent", "Unknown"),
-            "accept": request.headers.get("Accept", ""),
-            "accept-language": request.headers.get("Accept-Language", ""),
-            "accept-encoding": request.headers.get("Accept-Encoding", ""),
         }
     )
