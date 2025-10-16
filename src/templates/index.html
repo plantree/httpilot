@@ -306,40 +306,6 @@
             </div>
         </div>
 
-        <h3 class="collapsible">Cookie Management</h3>
-        <div class="collapsible-content">
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/cookies</code>
-                <div class="description">Return cookies sent by client</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -b "session=abc123;user=test" "http://localhost:5000/cookies"
-                    </div>
-                </div>
-            </div>
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/cookies/add</code>
-                <div class="description">Add random cookies to response for testing</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -c cookies.txt "http://localhost:5000/cookies/add"
-                    </div>
-                </div>
-            </div>
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/cookies/clear</code>
-                <div class="description">Clear all cookies from client</div>
-                <div class="curl-examples">
-                    <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/clear"
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <h3 class="collapsible">Response Inspection</h3>
         <div class="collapsible-content">
             <div class="endpoint">
@@ -349,10 +315,10 @@
                 <div class="description">Set custom response headers via query parameters</div>
                 <div class="curl-examples">
                     <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -i "http://localhost:5000/response-headers?X-Custom=test&Server=HTTPilot"
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/response-headers?X-Custom=test&Server=HTTPilot"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">POST:</span>curl -X POST -i "http://localhost:5000/response-headers?Cache-Control=no-cache"
+                        <span class="method-label">POST:</span>curl -X POST "http://localhost:5000/response-headers?Cache-Control=no-cache"
                     </div>
                 </div>
             </div>
@@ -418,7 +384,7 @@
                         <span class="method-label">GET:</span>curl -H "Accept-Encoding: br" "http://localhost:5000/brotli"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: br" "http://localhost:5000/brotli"
+                        <span class="method-label">Decompressed:</span>curl --compressed -H "Accept-Encoding: br" "http://localhost:5000/brotli"
                     </div>
                 </div>
             </div>
@@ -431,7 +397,7 @@
                         <span class="method-label">GET:</span>curl -H "Accept-Encoding: deflate" "http://localhost:5000/deflate"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: deflate" "http://localhost:5000/deflate"
+                        <span class="method-label">Decompressed:</span>curl --compressed -H "Accept-Encoding: deflate" "http://localhost:5000/deflate"
                     </div>
                 </div>
             </div>
@@ -444,7 +410,7 @@
                         <span class="method-label">GET:</span>curl -H "Accept-Encoding: gzip" "http://localhost:5000/gzip"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Verbose:</span>curl -v -H "Accept-Encoding: gzip" "http://localhost:5000/gzip"
+                        <span class="method-label">Decompressed:</span>curl --compressed -H "Accept-Encoding: gzip" "http://localhost:5000/gzip"
                     </div>
                 </div>
             </div>
@@ -533,6 +499,40 @@
                     </div>
                     <div class="curl-command">
                         <span class="method-label">Error:</span>curl "http://localhost:5000/delay/120"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <h3 class="collapsible">Cookie Management</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies</code>
+                <div class="description">Return cookies sent by client</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -b "session=abc123;user=test" "http://localhost:5000/cookies"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies/add</code>
+                <div class="description">Add random cookies to response for testing</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -c cookies.txt "http://localhost:5000/cookies/add"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies/clear</code>
+                <div class="description">Clear all cookies from client</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/clear"
                     </div>
                 </div>
             </div>

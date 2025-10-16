@@ -57,7 +57,7 @@ def return_xml():
         utcnow()
     )
 
-    response = jsonify(xml_data)
+    response = make_response(xml_data)
     response.headers["Content-Type"] = "application/xml"
     return response
 
@@ -86,7 +86,7 @@ def return_html():
         utcnow()
     )
 
-    response = jsonify(html_data)
+    response = make_response(html_data)
     response.headers["Content-Type"] = "text/html"
     return response
 
@@ -94,8 +94,7 @@ def return_html():
 @bp.route("/robots.txt")
 def robots():
     """Returns some robots.txt rules."""
-    response = make_response()
-    response.data = ROBOT_TXT
+    response = make_response(ROBOT_TXT)
     response.content_type = "text/plain"
     return response
 
