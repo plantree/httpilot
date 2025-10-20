@@ -24,7 +24,8 @@ def cache():
         response.headers["Last-Modified"] = http_date()
         response.headers["ETag"] = uuid.uuid4().hex
         return response
-    return status_code(304)
+    else:
+        return status_code(304)
 
 
 @bp.route("/cache/<int:value>", methods=["GET"])

@@ -36,6 +36,7 @@ def create_app(config_name="development"):
         cookies,
         dynamic_data,
         cache,
+        redirect,
     )
 
     app.register_blueprint(main.bp)
@@ -47,6 +48,7 @@ def create_app(config_name="development"):
     app.register_blueprint(dynamic_data.bp)
     app.register_blueprint(cookies.bp)
     app.register_blueprint(cache.bp)
+    app.register_blueprint(redirect.bp)
 
     # Error handlers
     @app.errorhandler(404)

@@ -1,11 +1,32 @@
 """Status code testing routes."""
 
-from flask import Blueprint, jsonify, abort
+from flask import Blueprint, jsonify, abort, make_response
 from werkzeug.exceptions import HTTPException
+import json
 
 from .utils import utcnow
 
 bp = Blueprint("status_codes", __name__)
+
+REDIRECT_LOCATION = "/redirect/1"
+ACCEPTED_MEDIA_TYPES = [
+    "image/webp",
+    "image/svg+xml",
+    "image/jpeg",
+    "image/png",
+    "image/*",
+]
+ASCII_ART = """
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `\"\"\"`
+"""
 
 
 @bp.route("/status/<int:code>", methods=["GET", "PUT", "PATCH", "POST", "OPTIONS"])
@@ -44,6 +65,36 @@ def status_code(code):
         505: "HTTP Version Not Supported",
     }
 
+    redirect = dict(headers=dict(location=REDIRECT_LOCATION))
+
+    code_map = {
+        301: redirect,
+        302: redirect,
+        303: redirect,
+        304: dict(data=""),
+        305: redirect,
+        306: redirect,
+        307: redirect,
+        401: dict(headers={"WWW-Authenticate": 'Basic realm="Fake Realm"'}),
+        402: dict(
+            data="Are you kidding?",
+            headers={"x-more-info": "http://vimeo.com/22053820"},
+        ),
+        406: dict(
+            data=json.dumps(
+                {
+                    "message": "Client did not request a supported media types.",
+                    "accept": ACCEPTED_MEDIA_TYPES,
+                }
+            )
+        ),
+        407: dict(headers={"Proxy-Authenticate": 'Basic realm="Fake Realm"'}),
+        418: dict(
+            data=ASCII_ART,
+            headers={"x-more-info": "http://tools.ietf.org/html/rfc2324"},
+        ),
+    }
+
     description = status_descriptions.get(code, "Unknown Status Code")
 
     response_data = {
@@ -53,23 +104,21 @@ def status_code(code):
         "timestamp": utcnow(),
     }
 
+    response = make_response()
+    response.status_code = code
+
     # For 204 No Content, return empty response
     if code == 204:
-        return "", 204
-
-    # For redirect status codes, add location header
-    if 300 <= code < 400:
-        response = jsonify(response_data)
-        response.status_code = code
-        response.headers["Location"] = "/get"
         return response
 
-    # For other status codes
-    if code in status_descriptions:
-        return jsonify(response_data), code
-    else:
-        # Handle unknown status codes
-        abort(400)
+    if code in code_map:
+        value = code_map[code]
+        if "data" in value:
+            response.data = value["data"]
+        if "headers" in value:
+            response.headers = value["headers"]
+
+    return response
 
 
 @bp.route("/status/random", methods=["GET"])

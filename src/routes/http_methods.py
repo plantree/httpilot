@@ -20,7 +20,7 @@ def get_request_info():
 
 
 @bp.route("/get", methods=["GET"])
-def test_get():
+def view_get():
     """Test GET requests."""
     info = get_request_info()
     return jsonify(info)
