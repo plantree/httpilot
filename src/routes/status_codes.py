@@ -95,15 +95,6 @@ def status_code(code):
         ),
     }
 
-    description = status_descriptions.get(code, "Unknown Status Code")
-
-    response_data = {
-        "status": code,
-        "message": description,
-        "description": f"This is a {code} {description} response from HTTPilot",
-        "timestamp": utcnow(),
-    }
-
     response = make_response()
     response.status_code = code
 
