@@ -71,6 +71,11 @@ def api_info():
                 "Dynamic Data": {
                     "/delay/<seconds>": "Return delayed response with timing information (max 60 seconds)",
                 },
+                "Redirects": {
+                    "/redirect/<n>": "302 redirect n times (supports absolute/relative query parameter)",
+                    "/absolute-redirect/<n>": "302 absolute redirect n times",
+                    "/relative-redirect/<n>": "302 relative redirect n times",
+                },
                 "System": {
                     "/health": "Health check endpoint",
                     "/api": "API information and endpoint list",

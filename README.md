@@ -21,6 +21,7 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 - **Response Formats & Encoding**: Test various response formats and compression algorithms (Brotli, GZip, Deflate, UTF-8)
 - **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
 - **Dynamic Data**: Time-sensitive responses with delays and timing information for testing timeout scenarios
+- **Redirects**: Test HTTP redirect behavior with configurable redirect counts and absolute/relative URL options
 - **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
 - **Version Management**: Automated version control using setuptools_scm and Git tags
 
@@ -104,6 +105,11 @@ The application will be available at `http://localhost:5000`
 
 ### Dynamic Data
 - `GET /delay/<seconds>` - Return delayed response with timing information (max 60 seconds)
+
+### Redirects
+- `GET /redirect/<n>` - 302 redirect n times (supports absolute/relative query parameter)
+- `GET /absolute-redirect/<n>` - 302 absolute redirect n times
+- `GET /relative-redirect/<n>` - 302 relative redirect n times
 
 ### System
 - `GET /health` - Health check endpoint
@@ -224,6 +230,34 @@ curl http://localhost:5000/delay/120
 
 # JSON output shows timing details
 curl -s http://localhost:5000/delay/2 | python -m json.tool
+```
+
+### Testing redirects
+```bash
+# Basic redirect test (3 redirects, follow automatically)
+curl -L http://localhost:5000/redirect/3
+
+# Test without following redirects (see Location header)
+curl -i http://localhost:5000/redirect/1
+
+# Force absolute redirects
+curl -L "http://localhost:5000/redirect/2?absolute=true"
+
+# Test absolute redirects endpoint
+curl -L http://localhost:5000/absolute-redirect/2
+curl -i http://localhost:5000/absolute-redirect/1
+
+# Test relative redirects endpoint  
+curl -L http://localhost:5000/relative-redirect/3
+curl -i http://localhost:5000/relative-redirect/1
+
+# Verbose output to see redirect chain
+curl -v -L http://localhost:5000/redirect/2
+curl -v -L http://localhost:5000/absolute-redirect/2
+curl -v -L http://localhost:5000/relative-redirect/2
+
+# Test redirect limits (most clients limit to ~20 redirects)
+curl -L http://localhost:5000/redirect/5
 ```
 
 ### Inspecting request headers

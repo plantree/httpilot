@@ -538,6 +538,55 @@
             </div>
         </div>
 
+        <h3 class="collapsible">Redirects</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/redirect/&lt;n&gt;</code>
+                <div class="description">Perform n redirects (302) with optional absolute/relative control. Use ?absolute=true for absolute redirects.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">3 redirects:</span>curl -L "http://localhost:5000/redirect/3"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Absolute:</span>curl -L "http://localhost:5000/redirect/2?absolute=true"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">No follow:</span>curl -i "http://localhost:5000/redirect/1"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/absolute-redirect/&lt;n&gt;</code>
+                <div class="description">Perform n absolute redirects (302). Always uses absolute URLs in Location header.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">2 redirects:</span>curl -L "http://localhost:5000/absolute-redirect/2"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Headers:</span>curl -i "http://localhost:5000/absolute-redirect/1"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/relative-redirect/&lt;n&gt;</code>
+                <div class="description">Perform n relative redirects (302). Uses relative URLs in Location header.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">3 redirects:</span>curl -L "http://localhost:5000/relative-redirect/3"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Headers:</span>curl -i "http://localhost:5000/relative-redirect/1"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Verbose:</span>curl -v -L "http://localhost:5000/relative-redirect/2"
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <h3 class="collapsible">System</h3>
         <div class="collapsible-content">
             <div class="endpoint">
