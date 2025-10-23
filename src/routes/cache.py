@@ -52,7 +52,7 @@ def etag(etag):
             response.headers["ETag"] = etag
             return response
     elif if_match:
-        if etag in if_match and "*" not in if_match:
+        if etag not in if_match and "*" not in if_match:
             return status_code(412)
     # return normal response
     response_data = {"message": "Doesn't match any etags", "timestamp": utcnow()}

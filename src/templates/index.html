@@ -426,7 +426,7 @@
             </div>
         </div>
 
-        <h3 class="collapsible">Cache Testing</h3>
+        <h3 class="collapsible">Cache</h3>
         <div class="collapsible-content">
             <div class="endpoint">
                 <span class="method get">GET</span>
@@ -434,13 +434,13 @@
                 <div class="description">Test HTTP caching. Returns 304 (Not Modified) if If-Modified-Since or If-None-Match headers are present, otherwise returns data with Last-Modified and ETag headers.</div>
                 <div class="curl-examples">
                     <div class="curl-command">
-                        <span class="method-label">GET:</span>curl "http://localhost:5000/cache"
+                        <span class="method-label">GET:</span>curl -i "http://localhost:5000/cache"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Conditional:</span>curl -H "If-Modified-Since: Thu, 01 Jan 1970 00:00:00 GMT" "http://localhost:5000/cache"
+                        <span class="method-label">Conditional:</span>curl -i -H "If-Modified-Since: Thu, 01 Jan 1970 00:00:00 GMT" "http://localhost:5000/cache"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">ETag:</span>curl -H "If-None-Match: some-etag" "http://localhost:5000/cache"
+                        <span class="method-label">ETag:</span>curl -i -H "If-None-Match: some-etag" "http://localhost:5000/cache"
                     </div>
                 </div>
             </div>
@@ -466,13 +466,13 @@
                         <span class="method-label">GET:</span>curl "http://localhost:5000/etag/test123"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Match:</span>curl -H "If-None-Match: test123" "http://localhost:5000/etag/test123"
+                        <span class="method-label">Match:</span>curl -i -H "If-None-Match: test123" "http://localhost:5000/etag/test123"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">Wildcard:</span>curl -H "If-None-Match: *" "http://localhost:5000/etag/test123"
+                        <span class="method-label">Wildcard:</span>curl -i -H "If-None-Match: *" "http://localhost:5000/etag/test123"
                     </div>
                     <div class="curl-command">
-                        <span class="method-label">If-Match:</span>curl -H "If-Match: other-etag" "http://localhost:5000/etag/test123"
+                        <span class="method-label">If-Match:</span>curl -i -H "If-Match: other-etag" "http://localhost:5000/etag/test123"
                     </div>
                 </div>
             </div>
