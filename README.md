@@ -20,7 +20,7 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 - **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers via query parameters
 - **Response Formats & Encoding**: Test various response formats and compression algorithms (Brotli, GZip, Deflate, UTF-8)
 - **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
-- **Dynamic Data**: Time-sensitive responses with delays and timing information for testing timeout scenarios
+- **Dynamic Data**: Time-sensitive responses, base64 encoding/decoding, random data generation, UUID generation, and streaming data
 - **Redirects**: Test HTTP redirect behavior with configurable redirect counts and absolute/relative URL options
 - **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
 - **Version Management**: Automated version control using setuptools_scm and Git tags
@@ -105,6 +105,12 @@ The application will be available at `http://localhost:5000`
 
 ### Dynamic Data
 - `GET /delay/<seconds>` - Return delayed response with timing information (max 60 seconds)
+- `GET /base64/encoding/<value>` - Encode string to base64url format
+- `GET /base64/decoding/<value>` - Decode base64url-encoded string
+- `GET /bytes/<n>` - Generate n random bytes (max 1MB, supports seed parameter)
+- `GET /uuid` - Generate a random UUID4
+- `GET /stream/<n>` - Stream n JSON responses (max 100)
+- `GET /stream-bytes/<n>` - Stream n random bytes (max 100KB, supports seed and chunk_size parameters)
 
 ### Redirects
 - `GET /redirect/<n>` - 302 redirect n times (supports absolute/relative query parameter)
@@ -230,6 +236,109 @@ curl http://localhost:5000/delay/120
 
 # JSON output shows timing details
 curl -s http://localhost:5000/delay/2 | python -m json.tool
+```
+
+### Testing base64 encoding and decoding
+```bash
+# Encode text to base64
+curl http://localhost:5000/base64/encoding/hello
+curl "http://localhost:5000/base64/encoding/Hello%20World"
+
+# Decode base64 text
+curl http://localhost:5000/base64/decoding/aGVsbG8=
+curl http://localhost:5000/base64/decoding/aGVsbG93b3JsZA==
+
+# Test invalid base64 (returns error)
+curl http://localhost:5000/base64/decoding/invalid-base64
+
+# Chain encoding and decoding
+original="test123"
+encoded=$(curl -s "http://localhost:5000/base64/encoding/$original")
+decoded=$(curl -s "http://localhost:5000/base64/decoding/$encoded")
+echo "Original: $original, Encoded: $encoded, Decoded: $decoded"
+```
+
+### Testing random data generation
+```bash
+# Generate 100 random bytes and check size
+curl http://localhost:5000/bytes/100 | wc -c
+
+# Generate with seed for reproducible output
+curl "http://localhost:5000/bytes/50?seed=12345" | hexdump -C
+curl "http://localhost:5000/bytes/50?seed=12345" | hexdump -C  # Same output
+
+# Generate different sizes
+curl http://localhost:5000/bytes/1024 | wc -c     # 1KB
+curl http://localhost:5000/bytes/10240 | wc -c    # 10KB
+
+# Save to file for further testing
+curl http://localhost:5000/bytes/500 -o random.bin
+file random.bin
+ls -la random.bin
+
+# Test maximum size (1MB limit)
+curl http://localhost:5000/bytes/1048576 | wc -c
+```
+
+### Testing UUID generation
+```bash
+# Generate a single UUID
+curl http://localhost:5000/uuid
+
+# Pretty print JSON response
+curl -s http://localhost:5000/uuid | python -m json.tool
+
+# Generate multiple UUIDs (each will be unique)
+for i in {1..5}; do 
+    curl -s http://localhost:5000/uuid | jq -r '.uuid'
+done
+
+# Extract just the UUID value
+uuid=$(curl -s http://localhost:5000/uuid | jq -r '.uuid')
+echo "Generated UUID: $uuid"
+```
+
+### Testing streaming data
+```bash
+# Stream 5 JSON responses
+curl http://localhost:5000/stream/5
+
+# Count streamed responses
+curl -s http://localhost:5000/stream/10 | wc -l
+
+# Process each JSON response as it arrives
+curl -s http://localhost:5000/stream/3 | while read line; do
+    echo "Received: $line"
+    echo "$line" | jq .id
+done
+
+# Stream with maximum items (100)
+curl http://localhost:5000/stream/100 | tail -5
+```
+
+### Testing streaming bytes
+```bash
+# Stream 1KB of random bytes
+curl http://localhost:5000/stream-bytes/1024 | wc -c
+
+# Stream with seed for reproducible output
+curl "http://localhost:5000/stream-bytes/500?seed=42" | hexdump -C | head -10
+
+# Stream with custom chunk size
+curl "http://localhost:5000/stream-bytes/100?chunk_size=10" | wc -c
+
+# Save streamed bytes to file
+curl "http://localhost:5000/stream-bytes/2048?seed=123" -o stream.bin
+ls -la stream.bin
+file stream.bin
+
+# Compare reproducible streams (should be identical)
+curl "http://localhost:5000/stream-bytes/100?seed=999" > stream1.bin
+curl "http://localhost:5000/stream-bytes/100?seed=999" > stream2.bin
+diff stream1.bin stream2.bin  # Should show no differences
+
+# Test maximum stream size (100KB)
+curl http://localhost:5000/stream-bytes/102400 | wc -c
 ```
 
 ### Testing redirects

@@ -70,6 +70,12 @@ def api_info():
                 },
                 "Dynamic Data": {
                     "/delay/<seconds>": "Return delayed response with timing information (max 60 seconds)",
+                    "/base64/encoding/<value>": "Encode string to base64url format",
+                    "/base64/decoding/<value>": "Decode base64url-encoded string",
+                    "/bytes/<n>": "Generate n random bytes (max 1MB, supports seed parameter)",
+                    "/uuid": "Generate a random UUID4",
+                    "/stream/<n>": "Stream n JSON responses (max 100)",
+                    "/stream-bytes/<n>": "Stream n random bytes (max 100KB, supports seed and chunk_size parameters)",
                 },
                 "Redirects": {
                     "/redirect/<n>": "302 redirect n times (supports absolute/relative query parameter)",

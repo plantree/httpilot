@@ -502,6 +502,108 @@
                     </div>
                 </div>
             </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/base64/encoding/&lt;value&gt;</code>
+                <div class="description">Encode string to base64url format. Useful for testing base64 encoding/decoding in APIs.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Encode:</span>curl "http://localhost:5000/base64/encoding/hello"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Text:</span>curl "http://localhost:5000/base64/encoding/Hello%20World"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">JSON:</span>curl "http://localhost:5000/base64/encoding/$(echo -n '{"key":"value"}' | base64 -w 0)"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/base64/decoding/&lt;value&gt;</code>
+                <div class="description">Decode base64url-encoded string. Returns decoded text or error message for invalid input.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Decode:</span>curl "http://localhost:5000/base64/decoding/aGVsbG8="
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Example:</span>curl "http://localhost:5000/base64/decoding/aGVsbG93b3JsZA=="
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Invalid:</span>curl "http://localhost:5000/base64/decoding/invalid-base64"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/bytes/&lt;n&gt;</code>
+                <div class="description">Generate n random bytes (max 1MB). Supports optional 'seed' parameter for reproducible output. Returns binary data with application/octet-stream content type.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">100 bytes:</span>curl "http://localhost:5000/bytes/100" | wc -c
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">With seed:</span>curl "http://localhost:5000/bytes/50?seed=12345" | hexdump -C
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">1KB:</span>curl "http://localhost:5000/bytes/1024" | wc -c
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Save file:</span>curl "http://localhost:5000/bytes/500" -o random.bin
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/uuid</code>
+                <div class="description">Generate a random UUID4. Returns JSON with UUID and timestamp. Useful for testing unique identifier generation.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">GET:</span>curl "http://localhost:5000/uuid"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">JSON:</span>curl -s "http://localhost:5000/uuid" | python -m json.tool
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Multiple:</span>for i in {1..3}; do curl -s "http://localhost:5000/uuid" | jq .uuid; done
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/stream/&lt;n&gt;</code>
+                <div class="description">Stream n JSON responses (max 100). Each response includes request info with incremental ID. Useful for testing streaming data processing.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">5 items:</span>curl "http://localhost:5000/stream/5"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Line count:</span>curl -s "http://localhost:5000/stream/10" | wc -l
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Process:</span>curl -s "http://localhost:5000/stream/3" | while read line; do echo "Got: $line"; done
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/stream-bytes/&lt;n&gt;</code>
+                <div class="description">Stream n random bytes (max 100KB) with configurable chunk size. Supports 'seed' for reproducible output and 'chunk_size' parameter (default 10KB).</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">1KB:</span>curl "http://localhost:5000/stream-bytes/1024" | wc -c
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">With seed:</span>curl "http://localhost:5000/stream-bytes/500?seed=42" | hexdump -C | head
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Small chunks:</span>curl "http://localhost:5000/stream-bytes/100?chunk_size=10" | wc -c
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Save stream:</span>curl "http://localhost:5000/stream-bytes/2048?seed=123" -o stream.bin
+                    </div>
+                </div>
+            </div>
         </div>
 
                 <h3 class="collapsible">Cookie Management</h3>

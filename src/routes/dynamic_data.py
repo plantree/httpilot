@@ -1,9 +1,13 @@
 """Dynamic data routes."""
 
-from flask import Blueprint, request, jsonify, make_response, Response
+import uuid
+from flask import Blueprint, json, request, jsonify, make_response, Response
 import base64
 import time
 import random
+from six.moves import range as xrange
+
+from .http_methods import get_request_info
 
 from .utils import utcnow
 
@@ -59,3 +63,54 @@ def random_bytes(n):
     response.data = bytearray(random.randint(0, 255) for i in range(n))
     response.content_type = "application/octet-stream"
     return response
+
+
+@bp.route("/uuid")
+def view_uuid():
+    """Return a UUID4."""
+    response_data = {"uuid": uuid.uuid4(), "timestamp": utcnow()}
+
+    return jsonify(response_data)
+
+
+@bp.route("/stream/<int:n>")
+def stream_n_messages(n):
+    """Stream n JSON responses."""
+    n = min(n, 100)
+    response = get_request_info()
+
+    def generate_stream():
+        for i in range(n):
+            response["id"] = i
+            yield json.dumps(response) + "\n"
+
+    return Response(generate_stream(), headers={"Content-Type": "application/json"})
+
+
+@bp.route("/stream-bytes/<int:n>")
+def stream_random_bytes(n):
+    """Streams n random bytes generated with given seed, at given chunk suze per packet."""
+    n = min(n, 100 * 1024)  # set 100kb limited
+    if "seed" in request.args:
+        random.seed(int(request.args["seed"]))
+
+    if "chunk_size" in request.args:
+        chunk_size = max(1, int(request.args["chunk_size"]))
+    else:
+        chunk_size = 10 * 1024
+
+    def generate_bytes():
+        chunks = bytearray()
+
+        for i in xrange(n):
+            chunks.append(random.randint(0, 255))
+            if len(chunks) == chunk_size:
+                yield (bytes(chunks))
+                chunks = bytearray()
+
+        if chunks:
+            yield (bytes(chunks))
+
+    return Response(
+        generate_bytes(), headers={"Content-Type": "application/octet-stream"}
+    )
