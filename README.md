@@ -20,7 +20,7 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 - **Response Inspection**: Generate JSON, XML, HTML responses and customize response headers via query parameters
 - **Response Formats & Encoding**: Test various response formats and compression algorithms (Brotli, GZip, Deflate, UTF-8)
 - **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
-- **Dynamic Data**: Time-sensitive responses, base64 encoding/decoding, random data generation, UUID generation, and streaming data
+- **Dynamic Data**: Time-sensitive responses, base64 encoding/decoding, random data generation, UUID generation, streaming data, data dripping, link generation, and HTTP range requests
 - **Redirects**: Test HTTP redirect behavior with configurable redirect counts and absolute/relative URL options
 - **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
 - **Version Management**: Automated version control using setuptools_scm and Git tags
@@ -111,6 +111,9 @@ The application will be available at `http://localhost:5000`
 - `GET /uuid` - Generate a random UUID4
 - `GET /stream/<n>` - Stream n JSON responses (max 100)
 - `GET /stream-bytes/<n>` - Stream n random bytes (max 100KB, supports seed and chunk_size parameters)
+- `GET /drip` - Drip data over a duration with optional delay (supports duration, numbytes, code, delay parameters)
+- `GET /links/<n>/<offset>` - Generate HTML page with n links (1-200 links, for testing crawlers)
+- `GET /range/<numbytes>` - Support HTTP range requests for partial content (max 100KB, supports chunk_size and duration)
 
 ### Redirects
 - `GET /redirect/<n>` - 302 redirect n times (supports absolute/relative query parameter)
@@ -339,6 +342,86 @@ diff stream1.bin stream2.bin  # Should show no differences
 
 # Test maximum stream size (100KB)
 curl http://localhost:5000/stream-bytes/102400 | wc -c
+```
+
+### Testing data dripping
+```bash
+# Basic drip (10 bytes over 2 seconds)
+curl http://localhost:5000/drip
+
+# Custom duration and bytes
+curl "http://localhost:5000/drip?duration=5&numbytes=50"
+
+# With initial delay
+curl "http://localhost:5000/drip?delay=2&duration=3&numbytes=20"
+
+# Measure timing
+time curl "http://localhost:5000/drip?duration=4&numbytes=100"
+
+# Large drip with custom status code
+curl "http://localhost:5000/drip?duration=1&numbytes=1000&code=201"
+
+# Test maximum size (10MB limit)
+curl "http://localhost:5000/drip?duration=10&numbytes=10485760" | wc -c
+```
+
+### Testing link generation
+```bash
+# Generate page with 10 links
+curl http://localhost:5000/links/10/0
+
+# Different offset (highlights link 5)
+curl http://localhost:5000/links/10/5
+
+# Maximum links (200)
+curl http://localhost:5000/links/200/0 | wc -l
+
+# Extract all links from page
+curl -s http://localhost:5000/links/5/2 | grep -o 'href="[^"]*"'
+
+# Count links in page
+curl -s http://localhost:5000/links/20/0 | grep -c '<a href='
+
+# Test crawler behavior simulation
+for i in {0..4}; do
+    echo "Page $i:"
+    curl -s "http://localhost:5000/links/5/$i" | grep -o "href='[^']*'" | head -3
+done
+```
+
+### Testing HTTP range requests
+```bash
+# Full content (200 OK)
+curl -i http://localhost:5000/range/100
+
+# First 10 bytes (206 Partial Content)
+curl -H "Range: bytes=0-9" -i http://localhost:5000/range/100
+curl -H "Range: bytes=0-9" http://localhost:5000/range/100 | wc -c
+
+# Last 10 bytes
+curl -H "Range: bytes=-10" -i http://localhost:5000/range/100
+
+# From byte 50 to end
+curl -H "Range: bytes=50-" -i http://localhost:5000/range/100
+
+# Middle section
+curl -H "Range: bytes=20-29" -i http://localhost:5000/range/100
+
+# Invalid range (416 Range Not Satisfiable)
+curl -H "Range: bytes=200-300" -i http://localhost:5000/range/100
+
+# Test with custom chunk size and duration
+curl -H "Range: bytes=0-49" "http://localhost:5000/range/100?chunk_size=10&duration=2"
+
+# Verify range content consistency
+curl -H "Range: bytes=0-25" http://localhost:5000/range/100 > part1.txt
+curl -H "Range: bytes=26-50" http://localhost:5000/range/100 > part2.txt
+curl -H "Range: bytes=0-50" http://localhost:5000/range/100 > full.txt
+cat part1.txt part2.txt > combined.txt
+diff combined.txt full.txt  # Should be identical
+
+# Test ETag and caching with ranges
+curl -H "Range: bytes=0-9" -i http://localhost:5000/range/100 | grep -E "(ETag|Accept-Ranges|Content-Range)"
 ```
 
 ### Testing redirects

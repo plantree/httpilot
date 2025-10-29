@@ -604,6 +604,66 @@
                     </div>
                 </div>
             </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/drip</code>
+                <div class="description">Drip data over a specified duration with optional initial delay. Supports parameters: duration (default 2s), numbytes (default 10, max 10MB), code (status code, default 200), delay (initial delay, default 0).</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Basic:</span>curl "http://localhost:5000/drip"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Custom:</span>curl "http://localhost:5000/drip?duration=5&numbytes=50"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">With delay:</span>curl "http://localhost:5000/drip?delay=2&duration=3&numbytes=20"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Timing:</span>time curl "http://localhost:5000/drip?duration=4&numbytes=100"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/links/&lt;n&gt;/&lt;offset&gt;</code>
+                <div class="description">Generate HTML page with n links to other pages (1-200 links). Useful for testing web crawlers and link following. The offset parameter highlights the current page.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">10 links:</span>curl "http://localhost:5000/links/10/0"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Different page:</span>curl "http://localhost:5000/links/10/5"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Max links:</span>curl "http://localhost:5000/links/200/0" | wc -l
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Extract links:</span>curl -s "http://localhost:5000/links/5/2" | grep -o 'href="[^"]*"'
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/range/&lt;numbytes&gt;</code>
+                <div class="description">Support HTTP range requests for partial content (max 100KB). Supports Range header for byte ranges, plus chunk_size and duration parameters. Returns 206 for partial content, 416 for invalid ranges.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Full:</span>curl -i "http://localhost:5000/range/100"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Range:</span>curl -H "Range: bytes=0-9" -i "http://localhost:5000/range/100"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Last 10:</span>curl -H "Range: bytes=-10" -i "http://localhost:5000/range/100"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">From 50:</span>curl -H "Range: bytes=50-" -i "http://localhost:5000/range/100"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Invalid:</span>curl -H "Range: bytes=200-300" -i "http://localhost:5000/range/100"
+                    </div>
+                </div>
+            </div>
         </div>
 
                 <h3 class="collapsible">Cookie Management</h3>

@@ -76,6 +76,9 @@ def api_info():
                     "/uuid": "Generate a random UUID4",
                     "/stream/<n>": "Stream n JSON responses (max 100)",
                     "/stream-bytes/<n>": "Stream n random bytes (max 100KB, supports seed and chunk_size parameters)",
+                    "/drip": "Drip data over a duration with optional delay (supports duration, numbytes, code, delay parameters)",
+                    "/links/<n>/<offset>": "Generate HTML page with n links (1-200 links, for testing crawlers)",
+                    "/range/<numbytes>": "Support HTTP range requests for partial content (max 100KB, supports chunk_size and duration)",
                 },
                 "Redirects": {
                     "/redirect/<n>": "302 redirect n times (supports absolute/relative query parameter)",
