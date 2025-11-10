@@ -84,6 +84,9 @@ The application will be available at `http://localhost:5000`
 - `GET /cookies` - Return cookies sent by client
 - `GET /cookies/add` - Add random test cookies to response
 - `GET /cookies/clear` - Clear all cookies from client
+- `GET|POST /cookies/set` - Set cookies from query parameters (redirects to /cookies)
+- `GET|POST /cookies/set/<name>/<value>` - Set specific cookie and redirect
+- `GET|POST /cookies/delete` - Delete cookies specified in query parameters
 
 ### Response Inspection
 - `GET /json` - Return sample JSON data
@@ -155,6 +158,27 @@ curl -b cookies.txt http://localhost:5000/cookies
 
 # Clear all cookies
 curl -c cookies.txt http://localhost:5000/cookies/clear
+
+# Set multiple cookies via query parameters (follow redirect)
+curl -L -c cookies.txt "http://localhost:5000/cookies/set?session=abc123&user=john&theme=dark"
+
+# Set specific cookie with URL path
+curl -L -c cookies.txt http://localhost:5000/cookies/set/username/alice
+
+# Set cookie with special characters (URL encoded)
+curl -L -c cookies.txt "http://localhost:5000/cookies/set?message=hello%20world%21"
+
+# Delete specific cookies
+curl -L -c cookies.txt "http://localhost:5000/cookies/delete?session&user"
+
+# Using POST to set cookies
+curl -X POST -L -c cookies.txt "http://localhost:5000/cookies/set?api_key=secret123"
+
+# Chain operations: set, view, delete, view
+curl -c cookies.txt "http://localhost:5000/cookies/set?test=value" && \
+curl -b cookies.txt http://localhost:5000/cookies && \
+curl -c cookies.txt "http://localhost:5000/cookies/delete?test" && \
+curl -b cookies.txt http://localhost:5000/cookies
 ```
 
 ### Testing custom response headers

@@ -680,21 +680,49 @@
             </div>
             <div class="endpoint">
                 <span class="method get">GET</span>
-                <code>/cookies/add</code>
-                <div class="description">Add random cookies to response for testing</div>
+                <code>/cookies/set</code>
+                <div class="description">Set cookies from query parameters and redirect to cookie list. Each query parameter becomes a cookie.</div>
                 <div class="curl-examples">
                     <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -c cookies.txt "http://localhost:5000/cookies/add"
+                        <span class="method-label">Single:</span>curl -c cookies.txt "http://localhost:5000/cookies/set?session=abc123"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Multiple:</span>curl -c cookies.txt "http://localhost:5000/cookies/set?user=john&theme=dark&lang=en"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Follow:</span>curl -L -c cookies.txt "http://localhost:5000/cookies/set?test=value"
                     </div>
                 </div>
             </div>
             <div class="endpoint">
                 <span class="method get">GET</span>
-                <code>/cookies/clear</code>
-                <div class="description">Clear all cookies from client</div>
+                <code>/cookies/set/&lt;name&gt;/&lt;value&gt;</code>
+                <div class="description">Set a specific cookie with name and value, then redirect to cookie list.</div>
                 <div class="curl-examples">
                     <div class="curl-command">
-                        <span class="method-label">GET:</span>curl -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/clear"
+                        <span class="method-label">Set cookie:</span>curl -c cookies.txt "http://localhost:5000/cookies/set/session/abc123"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Follow redirect:</span>curl -L -c cookies.txt "http://localhost:5000/cookies/set/user/john"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">URL encoded:</span>curl -c cookies.txt "http://localhost:5000/cookies/set/message/hello%20world"
+                    </div>
+                </div>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/cookies/delete</code>
+                <div class="description">Delete cookies specified in query parameters and redirect to cookie list. Each query parameter name specifies a cookie to delete.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Delete one:</span>curl -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/delete?session"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Delete multiple:</span>curl -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/delete?session&user&theme"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Follow redirect:</span>curl -L -b cookies.txt -c cookies.txt "http://localhost:5000/cookies/delete?test"
                     </div>
                 </div>
             </div>

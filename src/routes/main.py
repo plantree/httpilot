@@ -47,8 +47,9 @@ def api_info():
                 },
                 "Cookie Management": {
                     "/cookies": "Return cookies sent by client",
-                    "/cookies/add": "Add random test cookies to response",
-                    "/cookies/clear": "Clear all cookies from client",
+                    "/cookies/set": "Set cookies from query parameters and redirect to cookie list",
+                    "/cookies/set/<name>/<value>": "Set a specific cookie and redirect to cookie list",
+                    "/cookies/delete": "Delete cookies specified in query parameters and redirect to cookie list",
                 },
                 "Response Inspection": {
                     "/json": "Return sample JSON data",
