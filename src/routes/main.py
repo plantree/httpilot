@@ -85,6 +85,7 @@ def api_info():
                     "/redirect/<n>": "302 redirect n times (supports absolute/relative query parameter)",
                     "/absolute-redirect/<n>": "302 absolute redirect n times",
                     "/relative-redirect/<n>": "302 relative redirect n times",
+                    "/redirect-to": "Redirect to any URL with custom status code (supports GET, POST, PUT, DELETE, PATCH, TRACE)",
                 },
                 "Images": {
                     "/image": "Return image based on Accept header (supports PNG, JPEG, WebP, SVG)",

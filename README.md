@@ -123,6 +123,7 @@ The application will be available at `http://localhost:5000`
 - `GET /redirect/<n>` - 302 redirect n times (supports absolute/relative query parameter)
 - `GET /absolute-redirect/<n>` - 302 absolute redirect n times
 - `GET /relative-redirect/<n>` - 302 relative redirect n times
+- `GET|POST|PUT|DELETE|PATCH|TRACE /redirect-to` - Redirect to any URL with custom 3XX status code (requires url and status_code parameters)
 
 ### Images
 - `GET /image` - Return image based on Accept header (supports PNG, JPEG, WebP, SVG)
@@ -479,6 +480,20 @@ curl -i http://localhost:5000/relative-redirect/1
 curl -v -L http://localhost:5000/redirect/2
 curl -v -L http://localhost:5000/absolute-redirect/2
 curl -v -L http://localhost:5000/relative-redirect/2
+
+# Test custom redirect-to endpoint
+curl -i "http://localhost:5000/redirect-to?url=http://example.com&status_code=302"
+curl -i "http://localhost:5000/redirect-to?url=/ip&status_code=301"
+curl -L "http://localhost:5000/redirect-to?url=/json&status_code=307"
+
+# Test different HTTP methods with redirect-to
+curl -X POST -i "http://localhost:5000/redirect-to?url=/post&status_code=303"
+curl -X PUT -i "http://localhost:5000/redirect-to?url=/put&status_code=308"
+
+# Test invalid parameters (returns 400 Bad Request)
+curl -i "http://localhost:5000/redirect-to?url=test"  # missing status_code
+curl -i "http://localhost:5000/redirect-to?status_code=302"  # missing url
+curl -i "http://localhost:5000/redirect-to?url=test&status_code=invalid"  # invalid status_code
 
 # Test redirect limits (most clients limit to ~20 redirects)
 curl -L http://localhost:5000/redirect/5

@@ -775,6 +775,37 @@
                     </div>
                 </div>
             </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="method post">POST</span>
+                <span class="method put">PUT</span>
+                <span class="method delete">DELETE</span>
+                <span class="method patch">PATCH</span>
+                <span class="method trace">TRACE</span>
+                <code>/redirect-to</code>
+                <div class="description">Redirect to any URL with custom 3XX status code. Requires 'url' and 'status_code' query parameters. Returns 400 if parameters are missing or invalid.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Basic redirect:</span>curl -i "http://localhost:5000/redirect-to?url=http://example.com&amp;status_code=302"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Relative URL:</span>curl -L "http://localhost:5000/redirect-to?url=/ip&amp;status_code=301"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Different status:</span>curl -i "http://localhost:5000/redirect-to?url=/json&amp;status_code=307"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">POST method:</span>curl -X POST -i "http://localhost:5000/redirect-to?url=/post&amp;status_code=303"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">PUT method:</span>curl -X PUT -i "http://localhost:5000/redirect-to?url=/put&amp;status_code=308"
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Invalid (400):</span>curl -i "http://localhost:5000/redirect-to?url=test"
+                    </div>
+                </div>
+            </div>
         </div>
 
         <h3 class="collapsible">Images</h3>

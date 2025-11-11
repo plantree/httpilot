@@ -1,6 +1,8 @@
 """Returns different redirect responses."""
 
-from flask import Blueprint, request, url_for, redirect, make_response
+from flask import Blueprint, request, url_for, redirect, make_response, jsonify
+
+from .utils import utcnow
 
 bp = Blueprint("redirect", __name__)
 
@@ -49,3 +51,40 @@ def relative_redirect_n_times(n):
         return redirect(url_for("http_methods.view_get", _external=False))
 
     return _redirect("relative", n, False)
+
+
+def is_int(str):
+    try:
+        n = int(str)
+        return True
+    except:
+        return False
+
+
+@bp.route("/redirect-to", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
+def redirect_to():
+    """302/3XX redirects to the given URL."""
+    args = request.args
+
+    if (
+        "status_code" not in args
+        or not is_int(args["status_code"])
+        or "url" not in args
+    ):
+        response = jsonify(
+            {
+                "message": "invalid input. Example: /redirect-to?url=ip&status_code=302",
+                "timestamp": utcnow(),
+            }
+        )
+        response.status_code = 400
+        return response
+
+    response = make_response()
+    response.status_code = 302
+    status_code = int(args["status_code"])
+    if status_code >= 300 and status_code < 400:
+        response.status_code = status_code
+    response.headers["Location"] = args["url"]
+
+    return response
