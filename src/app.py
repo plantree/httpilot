@@ -10,8 +10,6 @@ from urllib.parse import urlencode
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from werkzeug.exceptions import HTTPException
 
-from .routes import dynamic_data
-
 
 def create_app(config_name="development"):
     """Create and configure Flask application."""
@@ -37,6 +35,7 @@ def create_app(config_name="development"):
         dynamic_data,
         cache,
         redirect,
+        image,
     )
 
     app.register_blueprint(main.bp)
@@ -49,6 +48,7 @@ def create_app(config_name="development"):
     app.register_blueprint(cookies.bp)
     app.register_blueprint(cache.bp)
     app.register_blueprint(redirect.bp)
+    app.register_blueprint(image.bp)
 
     # Error handlers
     @app.errorhandler(404)

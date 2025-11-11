@@ -22,6 +22,7 @@ HTTPilot is a Flask-based HTTP testing service that helps developers understand 
 - **Cache Testing**: Test HTTP caching mechanisms with conditional requests, ETags, and Cache-Control headers
 - **Dynamic Data**: Time-sensitive responses, base64 encoding/decoding, random data generation, UUID generation, streaming data, data dripping, link generation, and HTTP range requests
 - **Redirects**: Test HTTP redirect behavior with configurable redirect counts and absolute/relative URL options
+- **Images**: Content negotiation for different image formats (PNG, JPEG, WebP, SVG) with proper HTTP headers
 - **Interactive Web Interface**: Clean HTML interface with collapsible sections and ready-to-use curl examples
 - **Version Management**: Automated version control using setuptools_scm and Git tags
 
@@ -122,6 +123,13 @@ The application will be available at `http://localhost:5000`
 - `GET /redirect/<n>` - 302 redirect n times (supports absolute/relative query parameter)
 - `GET /absolute-redirect/<n>` - 302 absolute redirect n times
 - `GET /relative-redirect/<n>` - 302 relative redirect n times
+
+### Images
+- `GET /image` - Return image based on Accept header (supports PNG, JPEG, WebP, SVG)
+- `GET /image/png` - Return a simple PNG image
+- `GET /image/jpeg` - Return a simple JPEG image
+- `GET /image/webp` - Return a simple WebP image
+- `GET /image/svg` - Return a simple SVG image
 
 ### System
 - `GET /health` - Health check endpoint
@@ -474,6 +482,38 @@ curl -v -L http://localhost:5000/relative-redirect/2
 
 # Test redirect limits (most clients limit to ~20 redirects)
 curl -L http://localhost:5000/redirect/5
+```
+
+### Testing images
+```bash
+# Get image based on Accept header (default: PNG)
+curl "http://localhost:5000/image" -o downloaded_image.png
+
+# Request specific image formats using Accept header
+curl -H "Accept: image/jpeg" "http://localhost:5000/image" -o image.jpg
+curl -H "Accept: image/webp" "http://localhost:5000/image" -o image.webp
+curl -H "Accept: image/svg+xml" "http://localhost:5000/image" -o image.svg
+
+# Request unsupported format (returns 406 Not Acceptable)
+curl -i -H "Accept: image/gif" "http://localhost:5000/image"
+
+# Get specific image formats directly
+curl "http://localhost:5000/image/png" -o pig.png
+curl "http://localhost:5000/image/jpeg" -o jackal.jpg
+curl "http://localhost:5000/image/webp" -o wolf.webp
+curl "http://localhost:5000/image/svg" -o logo.svg
+
+# Check image headers and content type
+curl -I "http://localhost:5000/image/png"
+curl -I "http://localhost:5000/image/jpeg"
+curl -I "http://localhost:5000/image/webp"
+curl -I "http://localhost:5000/image/svg"
+
+# View SVG image as text
+curl "http://localhost:5000/image/svg"
+
+# Test content negotiation with multiple Accept types
+curl -H "Accept: image/webp,image/jpeg,*/*" "http://localhost:5000/image" -o negotiated.webp
 ```
 
 ### Inspecting request headers

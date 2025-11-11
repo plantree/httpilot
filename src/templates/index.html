@@ -777,6 +777,88 @@
             </div>
         </div>
 
+        <h3 class="collapsible">Images</h3>
+        <div class="collapsible-content">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/image</code>
+                <div class="description">Return image based on Accept header. Supports PNG, JPEG, WebP, and SVG formats. Returns 406 if unsupported format requested.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Default (PNG):</span>curl "http://localhost:5000/image" -o image.png
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Request JPEG:</span>curl -H "Accept: image/jpeg" "http://localhost:5000/image" -o image.jpg
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Request WebP:</span>curl -H "Accept: image/webp" "http://localhost:5000/image" -o image.webp
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Request SVG:</span>curl -H "Accept: image/svg+xml" "http://localhost:5000/image" -o image.svg
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">Unsupported:</span>curl -H "Accept: image/gif" "http://localhost:5000/image"
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/image/png</code>
+                <div class="description">Return a simple PNG image.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Save PNG:</span>curl "http://localhost:5000/image/png" -o pig.png
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">View headers:</span>curl -I "http://localhost:5000/image/png"
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/image/jpeg</code>
+                <div class="description">Return a simple JPEG image.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Save JPEG:</span>curl "http://localhost:5000/image/jpeg" -o jackal.jpg
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">View headers:</span>curl -I "http://localhost:5000/image/jpeg"
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/image/webp</code>
+                <div class="description">Return a simple WebP image.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Save WebP:</span>curl "http://localhost:5000/image/webp" -o wolf.webp
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">View headers:</span>curl -I "http://localhost:5000/image/webp"
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/image/svg</code>
+                <div class="description">Return a simple SVG image.</div>
+                <div class="curl-examples">
+                    <div class="curl-command">
+                        <span class="method-label">Save SVG:</span>curl "http://localhost:5000/image/svg" -o logo.svg
+                    </div>
+                    <div class="curl-command">
+                        <span class="method-label">View SVG:</span>curl "http://localhost:5000/image/svg"
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <h3 class="collapsible">System</h3>
         <div class="collapsible-content">
             <div class="endpoint">

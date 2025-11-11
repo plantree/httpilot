@@ -86,6 +86,13 @@ def api_info():
                     "/absolute-redirect/<n>": "302 absolute redirect n times",
                     "/relative-redirect/<n>": "302 relative redirect n times",
                 },
+                "Images": {
+                    "/image": "Return image based on Accept header (supports PNG, JPEG, WebP, SVG)",
+                    "/image/png": "Return a simple PNG image",
+                    "/image/jpeg": "Return a simple JPEG image",
+                    "/image/webp": "Return a simple WebP image",
+                    "/image/svg": "Return a simple SVG image",
+                },
                 "System": {
                     "/health": "Health check endpoint",
                     "/api": "API information and endpoint list",
