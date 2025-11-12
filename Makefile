@@ -24,6 +24,9 @@ install:
 dev: install
 	pip install pytest pytest-cov black flake8
 
+build: install
+	pip install .
+
 # Run the application
 run:
 	python run.py
