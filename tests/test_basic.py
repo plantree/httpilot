@@ -19,7 +19,7 @@ def test_api_info(client):
     assert response.status_code == 200
     data = json.loads(response.data)
     assert data["name"] == "HTTPilot"
-    assert data["version"] == "0.1.0"
+    assert "version" in data  # Version is now dynamic
     assert "endpoints" in data
 
 

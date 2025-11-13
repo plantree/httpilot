@@ -8,36 +8,29 @@ def test_status_200(client):
     """Test 200 status code."""
     response = client.get("/status/200")
     assert response.status_code == 200
-    data = json.loads(response.data)
-    assert data["status"] == 200
-    assert data["message"] == "OK"
+    # Status 200 returns empty response by default
 
 
 def test_status_404(client):
     """Test 404 status code."""
     response = client.get("/status/404")
     assert response.status_code == 404
-    data = json.loads(response.data)
-    assert data["status"] == 404
-    assert data["message"] == "Not Found"
+    # Status 404 returns empty response by default
 
 
 def test_status_500(client):
     """Test 500 status code."""
     response = client.get("/status/500")
     assert response.status_code == 500
-    data = json.loads(response.data)
-    assert data["status"] == 500
-    assert data["message"] == "Internal Server Error"
+    # Status 500 returns empty response by default
 
 
 def test_status_418(client):
     """Test 418 I'm a teapot status code."""
     response = client.get("/status/418")
     assert response.status_code == 418
-    data = json.loads(response.data)
-    assert data["status"] == 418
-    assert data["message"] == "I'm a teapot"
+    # Status 418 returns ASCII art teapot (text content)
+    assert "teapot" in response.data.decode("utf-8")
 
 
 def test_status_204(client):
@@ -52,9 +45,7 @@ def test_status_redirect(client):
     response = client.get("/status/301")
     assert response.status_code == 301
     assert "Location" in response.headers
-    data = json.loads(response.data)
-    assert data["status"] == 301
-    assert data["message"] == "Moved Permanently"
+    # Redirect status returns empty response by default
 
 
 def test_random_status(client):

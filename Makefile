@@ -9,10 +9,15 @@ help:
 	@echo "  install  - Install dependencies"
 	@echo "  dev      - Install development dependencies"
 	@echo "  run      - Run the application in development mode"
-	@echo "  test     - Run tests"
+	@echo "  test     - Run basic tests"
+	@echo "  test-all - Run comprehensive test suite"
+	@echo "  test-unit - Run unit tests only"
+	@echo "  test-integration - Run integration tests only"
 	@echo "  coverage - Run tests with coverage report"
+	@echo "  test-report - Generate detailed test reports"
 	@echo "  clean    - Clean up cache files"
 	@echo "  format   - Format code with black (if installed)"
+	@echo "  lint     - Run code linting"
 	@echo "  version  - Show current version"
 	@echo "  tag      - Create a new release tag (usage: make tag VERSION=x.y.z)"
 
@@ -31,13 +36,33 @@ build: install
 run:
 	python run.py
 
-# Run tests
+# Run basic tests
 test:
-	pytest
+	pytest tests/ -v
+
+# Run comprehensive test suite
+test-all:
+	python run_tests.py
+
+# Run unit tests only (exclude integration tests)
+test-unit:
+	pytest tests/ -v -k "not integration"
+
+# Run integration tests only
+test-integration:
+	pytest tests/test_integration.py -v
 
 # Run tests with coverage
 coverage:
-	pytest --cov=src --cov-report=html --cov-report=term
+	pytest tests/ --cov=src --cov-report=html --cov-report=term-missing --cov-report=xml
+
+# Generate detailed test reports
+test-report:
+	pytest tests/ --cov=src --cov-report=html --cov-report=xml --junit-xml=test-results.xml -v
+
+# Run code linting
+lint:
+	flake8 src/ tests/ --max-line-length=100 --extend-ignore=E203,W503
 
 # Clean up cache files
 clean:
